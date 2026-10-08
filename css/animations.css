@@ -1,0 +1,97 @@
+/* ============================================================
+   ANIMAções — keyframes e movimentos cinematográficos
+   ============================================================ */
+
+@keyframes blink {
+  0%, 49%  { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 0.9; }
+}
+
+@keyframes bookArrive {
+  0%   { opacity: 0; transform: translateY(30px) rotateX(7deg) rotateY(-8deg) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) rotateX(3deg) rotateY(-4deg) scale(1); }
+}
+
+@keyframes pageTurn {
+  0%   { opacity: 0;   transform: rotateY(0deg); }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { opacity: 0;   transform: rotateY(-178deg); }
+}
+
+@keyframes coverOpen {
+  0%   { transform: rotateY(0deg); filter: brightness(1); }
+  55%  { filter: brightness(1.25); }
+  100% { transform: rotateY(-148deg); filter: brightness(0.7); }
+}
+
+@keyframes orbArrive {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+  60%  { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes orbBreathe {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.24); }
+}
+
+@keyframes corePulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.94); }
+  50%      { opacity: 1;    transform: scale(1.06); }
+}
+
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.35; transform: rotate(45deg) scale(0.7); }
+  50%      { opacity: 1;    transform: rotate(45deg) scale(1.15); }
+}
+
+@keyframes orbCollect {
+  0%   { opacity: 1;   transform: translate(-50%, -50%) scale(1); }
+  35%  { opacity: 1;   transform: translate(-50%, -50%) scale(1.3); filter: brightness(1.9); }
+  100% { opacity: 0;   transform: translate(-50%, -50%) scale(0.05); filter: brightness(2.4); }
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes eyeGlow {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+@keyframes letterRise {
+  0%   { opacity: 0; transform: translateY(60px) scale(0.96) rotate(-0.6deg); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+}
+
+/* caminhada dos animais */
+@keyframes strollCat {
+  0%   { left: -180px; opacity: 0; }
+  7%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { left: 106%; opacity: 0; }
+}
+
+@keyframes strollDog {
+  0%   { left: -240px; opacity: 0; }
+  7%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { left: 108%; opacity: 0; }
+}
+
+.critter { animation-fill-mode: both; }
+
+/* fumaça/energia subindo */
+@keyframes drift {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  15%  { opacity: 1; }
+  100% { transform: translateY(-70px) translateX(18px); opacity: 0; }
+}

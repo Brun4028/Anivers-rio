@@ -1,0 +1,8 @@
+Coloque aqui um arquivo de música ambiente royalty-free com o nome:
+
+    ambient.mp3
+
+Definido em js/config.js -> music.src.
+
+Sem o arquivo a experiência funciona normalmente, apenas com os
+efeitos sonoros sintetizados.

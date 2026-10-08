@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Isadora's Note</title>
+<meta name="description" content="Uma experiência de aniversário.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,300&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/scenes.css">
+<link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+<!-- Camada global de partículas -->
+<canvas id="fx-canvas" aria-hidden="true"></canvas>
+
+<!-- Conteúdo principal -->
+<main id="stage">
+
+  <!-- ============ TELA PRETA / INTRODUÇÃO ============ -->
+  <section class="scene is-active" id="scene-intro" aria-label="Introdução">
+    <p class="intro__line" id="intro-line" aria-live="polite"></p>
+    <span class="intro__hint" id="intro-hint">TOCAR</span>
+  </section>
+
+  <!-- ============ O LIVRO ============ -->
+  <section class="scene" id="scene-book" aria-label="O livro">
+    <div class="book-stage">
+      <div class="book book--closed" id="cover-book">
+        <div class="book__shadow"></div>
+        <div class="book__cover">
+          <span class="book__edge book__edge--l"></span>
+          <span class="book__grain"></span>
+          <span class="book__ornament"></span>
+          <h1 class="book__title">ISADORA'S NOTE</h1>
+          <span class="book__rule"></span>
+          <span class="book__corner book__corner--tl"></span>
+          <span class="book__corner book__corner--tr"></span>
+          <span class="book__corner book__corner--bl"></span>
+          <span class="book__corner book__corner--br"></span>
+        </div>
+        <div class="book__pages-edge"></div>
+      </div>
+      <p class="book__note" id="book-note">Uma nova regra foi adicionada.</p>
+    </div>
+    <button class="btn" id="btn-open-book">ABRIR</button>
+  </section>
+
+  <!-- ============ CAPÍTULO 1 — AS NOVAS REGRAS ============ -->
+  <section class="scene" id="scene-rules" aria-label="As novas regras">
+    <div class="book book--open" id="rules-book">
+      <div class="book__shadow"></div>
+      <div class="book__spread">
+        <div class="page page--left">
+          <span class="page__num">— i —</span>
+          <span class="page__grain"></span>
+        </div>
+        <div class="page page--right">
+          <span class="page__grain"></span>
+          <div class="rule" id="rule-content"></div>
+          <span class="page__num page__num--r">— ii —</span>
+        </div>
+        <div class="page-flip" id="page-flip"><span class="page__grain"></span></div>
+        <div class="page__glow" id="page-glow"></div>
+      </div>
+    </div>
+    <button class="btn" id="btn-rule">CONTINUAR</button>
+  </section>
+
+  <!-- ============ CAPÍTULO 2 — AS SETE ESFERAS ============ -->
+  <section class="scene" id="scene-spheres" aria-label="As sete esferas">
+    <div class="orbs" id="orbs-scattered"></div>
+    <div class="orbit" id="orbs-orbit" hidden>
+      <div class="orbit__core"></div>
+      <div class="orbit__ring"></div>
+    </div>
+    <p class="counter" id="orb-counter">ESFERAS REUNIDAS: <span id="orb-count">0</span> / 7</p>
+  </section>
+
+  <!-- ============ CAPÍTULO 3 — O DESEJO ============ -->
+  <section class="scene" id="scene-dragon" aria-label="O desejo">
+    <div class="dragon" id="dragon" aria-hidden="true">
+      <span class="dragon__glow"></span>
+      <svg class="dragon__svg" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid meet">
+        <g class="dragon__silhouette">
+          <path d="M60 600 C 150 640 240 600 300 545" />
+          <path d="M290 555 C 370 500 400 445 430 405" />
+          <path d="M420 425 C 455 355 485 320 550 302" />
+          <path d="M540 308 C 615 272 695 325 760 302" />
+          <path d="M750 304 C 815 284 845 242 893 220" />
+          <path d="M885 222 C 915 206 935 199 958 196" />
+          <path class="dragon__head" d="M938 202 C 972 180 1018 158 1068 152 C 1092 149 1102 160 1093 173 C 1083 187 1055 191 1035 197 C 1060 205 1079 215 1083 228 C 1087 242 1070 248 1051 241 C 1024 232 994 233 974 241 C 949 250 931 241 927 225 C 924 213 929 207 938 202 Z" />
+          <path class="dragon__horn" d="M998 170 C 984 141 951 121 916 113 C 946 130 970 148 986 174 Z" />
+          <path class="dragon__horn" d="M1024 164 C 1018 137 999 116 974 103 C 998 123 1014 143 1019 169 Z" />
+          <path class="dragon__whisker" d="M1090 178 C 1122 171 1152 177 1172 191" />
+          <path class="dragon__whisker" d="M1076 233 C 1106 245 1128 263 1136 283" />
+          <path class="dragon__fin" d="M470 340 L 452 300 L 488 328 Z" />
+          <path class="dragon__fin" d="M560 292 L 552 250 L 588 284 Z" />
+          <path class="dragon__fin" d="M666 310 L 668 268 L 700 306 Z" />
+          <path class="dragon__fin" d="M812 276 L 822 236 L 846 282 Z" />
+          <path class="dragon__fin" d="M352 505 L 336 468 L 374 492 Z" />
+        </g>
+        <ellipse class="dragon__eye" cx="1023" cy="187" rx="7" ry="5" />
+      </svg>
+    </div>
+    <div class="orbit orbit--sm" id="dragon-orbit" aria-hidden="true"></div>
+    <div class="dragon__lines">
+      <p class="whisper" id="dragon-q"></p>
+      <p class="whisper whisper--low" id="dragon-a"></p>
+    </div>
+    <button class="btn" id="btn-dragon" hidden>CONTINUAR</button>
+  </section>
+
+  <!-- ============ CAPÍTULO 4 — O NOME ============ -->
+  <section class="scene" id="scene-name" aria-label="O nome">
+    <div class="book book--open book--flat" id="name-book">
+      <div class="book__shadow"></div>
+      <div class="book__spread">
+        <div class="page page--left page--empty">
+          <span class="page__grain"></span>
+          <span class="page__whisper">escrito à mão,<br>com cuidado.</span>
+        </div>
+        <div class="page page--right">
+          <span class="page__grain"></span>
+          <div class="name-block">
+            <span class="name-block__label">nome</span>
+            <div class="name-block__writing">
+              <span class="name-block__name" id="written-name"></span>
+              <span class="pen" id="pen" aria-hidden="true">
+                <svg viewBox="0 0 40 150" preserveAspectRatio="none">
+                  <path d="M20 0 L27 24 L27 112 L20 148 L13 112 L13 24 Z" />
+                  <path class="pen__nib" d="M20 112 L24 132 L20 148 L16 132 Z" />
+                </svg>
+              </span>
+            </div>
+            <div class="name-meta" id="name-meta">
+              <p class="name-meta__line" data-text="Nome registrado."></p>
+              <p class="name-meta__line name-meta__line--field" data-label="Data de nascimento:"></p>
+              <p class="name-meta__line" data-text="Status: Aniversariante"></p>
+              <p class="name-meta__line" data-text="Destino: Felicidade"></p>
+            </div>
+          </div>
+          <span class="page__num page__num--r">— iii —</span>
+        </div>
+      </div>
+    </div>
+    <h2 class="birthday" id="birthday" aria-live="polite"></h2>
+    <button class="btn" id="btn-name" hidden>CONTINUAR</button>
+  </section>
+
+  <!-- ============ CAPÍTULO 5 — A SENTENÇA ============ -->
+  <section class="scene" id="scene-sentence" aria-label="A sentença">
+    <div class="sentence" id="sentence-doc">
+      <span class="ornament ornament--top" aria-hidden="true"></span>
+      <h2 class="sentence__title">SENTENÇA</h2>
+      <span class="sentence__hr" aria-hidden="true"></span>
+      <p class="sentence__lead">Condenada a:</p>
+      <ul class="sentence__list" id="sentence-list">
+        <li>receber carinho</li>
+        <li>rir até a barriga doer</li>
+        <li>receber amor de animais</li>
+        <li>ter muitos momentos felizes</li>
+        <li>continuar criando coisas incríveis</li>
+        <li>deixar sua marca no mundo</li>
+        <li>realizar seus sonhos</li>
+      </ul>
+      <span class="sentence__hr sentence__hr--short" aria-hidden="true"></span>
+      <p class="sentence__duration">Duração da sentença:</p>
+      <p class="sentence__forever" id="sentence-forever">O resto da vida.</p>
+      <span class="ornament ornament--bottom" aria-hidden="true"></span>
+    </div>
+    <button class="btn" id="btn-sentence" hidden>CONTINUAR</button>
+  </section>
+
+  <!-- ============ CAPÍTULO 6 — OS ANIMAIS ============ -->
+  <section class="scene" id="scene-animals" aria-label="Os animais">
+    <div class="critters" aria-hidden="true">
+      <svg class="critter critter--cat" viewBox="0 0 150 130">
+        <g>
+          <path class="critter__tail" d="M42 112 C 22 112 12 96 20 80 C 26 68 42 66 48 76" />
+          <path d="M44 118 C 38 94 44 70 62 58 C 72 51 84 48 94 50 C 108 53 118 66 120 82 C 122 98 120 110 120 118 Z" />
+          <path d="M74 44 L 68 18 L 92 36 Z" />
+          <path d="M110 34 L 124 12 L 124 42 Z" />
+          <path d="M76 34 C 76 18 90 8 106 10 C 120 12 128 24 126 38 C 124 52 112 60 98 58 C 86 56 76 48 76 34 Z" />
+          <rect x="104" y="92" width="11" height="27" rx="5" />
+        </g>
+      </svg>
+      <svg class="critter critter--dog" viewBox="0 0 170 130">
+        <g>
+          <path class="critter__tail" d="M38 84 C 22 76 18 56 30 44" />
+          <path d="M34 70 C 44 54 70 46 96 48 C 118 50 134 58 142 72 L 146 104 L 134 104 L 130 84 L 124 104 L 112 104 L 108 82 L 66 84 L 62 104 L 50 104 L 46 82 L 40 104 L 30 104 Z" />
+          <path d="M136 56 C 136 40 148 28 162 30 C 172 32 176 42 174 52 L 176 60 C 176 68 168 74 158 74 C 146 74 136 68 136 56 Z" />
+          <path d="M168 52 L 168 70 C 174 72 178 78 176 84 L 156 82 C 152 76 152 66 156 58 Z" />
+          <path d="M140 34 C 128 28 122 44 128 60 C 132 70 144 72 148 62 Z" />
+        </g>
+      </svg>
+    </div>
+    <div class="animals__lines">
+      <p class="whisper" id="animal-line-1"></p>
+      <p class="whisper whisper--low" id="animal-line-2"></p>
+    </div>
+    <button class="btn btn--seal" id="btn-gift" hidden>ABRIR PRESENTE</button>
+  </section>
+
+  <!-- ============ CAPÍTULO 7 — A CARTA ============ -->
+  <section class="scene" id="scene-gift" aria-label="O presente">
+    <div class="gift" id="gift">
+      <div class="gift__lid" id="gift-lid"><span class="gift__ribbon"></span></div>
+      <div class="gift__box">
+        <span class="gift__ribbon gift__ribbon--v"></span>
+        <span class="gift__sheen"></span>
+      </div>
+      <span class="gift__glow" id="gift-glow"></span>
+    </div>
+    <span class="intro__hint" id="gift-hint">TOCAR</span>
+
+    <article class="letter" id="letter" hidden>
+      <div class="letter__paper">
+        <span class="letter__edge"></span>
+        <div class="letter__text" id="letter-text"></div>
+        <span class="letter__seal" aria-hidden="true"></span>
+      </div>
+    </article>
+    <button class="btn" id="btn-letter" hidden>CONTINUAR</button>
+  </section>
+
+  <!-- ============ CAPÍTULO FINAL — A MENSAGEM ============ -->
+  <section class="scene" id="scene-final" aria-label="Mensagem final">
+    <div class="dragon dragon--ghost" id="dragon-ghost" aria-hidden="true">
+      <span class="dragon__glow dragon__glow--soft"></span>
+      <svg class="dragon__svg" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid meet">
+        <g class="dragon__silhouette">
+          <path d="M60 600 C 150 640 240 600 300 545" />
+          <path d="M290 555 C 370 500 400 445 430 405" />
+          <path d="M420 425 C 455 355 485 320 550 302" />
+          <path d="M540 308 C 615 272 695 325 760 302" />
+          <path d="M750 304 C 815 284 845 242 893 220" />
+          <path d="M885 222 C 915 206 935 199 958 196" />
+          <path class="dragon__head" d="M938 202 C 972 180 1018 158 1068 152 C 1092 149 1102 160 1093 173 C 1083 187 1055 191 1035 197 C 1060 205 1079 215 1083 228 C 1087 242 1070 248 1051 241 C 1024 232 994 233 974 241 C 949 250 931 241 927 225 C 924 213 929 207 938 202 Z" />
+          <path class="dragon__horn" d="M998 170 C 984 141 951 121 916 113 C 946 130 970 148 986 174 Z" />
+          <path class="dragon__horn" d="M1024 164 C 1018 137 999 116 974 103 C 998 123 1014 143 1019 169 Z" />
+          <path class="dragon__whisker" d="M1090 178 C 1122 171 1152 177 1172 191" />
+          <path class="dragon__whisker" d="M1076 233 C 1106 245 1128 263 1136 283" />
+          <path class="dragon__fin" d="M470 340 L 452 300 L 488 328 Z" />
+          <path class="dragon__fin" d="M560 292 L 552 250 L 588 284 Z" />
+          <path class="dragon__fin" d="M666 310 L 668 268 L 700 306 Z" />
+          <path class="dragon__fin" d="M812 276 L 822 236 L 846 282 Z" />
+          <path class="dragon__fin" d="M352 505 L 336 468 L 374 492 Z" />
+        </g>
+        <ellipse class="dragon__eye" cx="1023" cy="187" rx="7" ry="5" />
+      </svg>
+    </div>
+
+    <div class="final__lines">
+      <p class="whisper" id="final-1"></p>
+      <p class="whisper" id="final-2"></p>
+      <p class="whisper" id="final-3"></p>
+    </div>
+
+    <div class="final__mark" id="final-mark" hidden>
+      <p class="final__friendship" id="final-friendship"></p>
+      <div class="final__halo">
+        <div class="orbit orbit--ring" id="final-orbit"></div>
+        <p class="final__name" id="final-name"></p>
+      </div>
+      <p class="final__birth" id="final-birth"></p>
+      <span class="ornament ornament--end"></span>
+      <button class="btn btn--ghost" id="btn-restart" hidden>RECOMEÇAR</button>
+    </div>
+  </section>
+
+</main>
+
+<button class="sound" id="sound-toggle" aria-label="Ativar ou desativar som" hidden>SOM</button>
+<audio id="music" loop preload="auto"></audio>
+
+<script src="js/config.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

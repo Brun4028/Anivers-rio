@@ -1,0 +1,266 @@
+/* ============================================================
+   BASE — paleta, tipografia, palco e transições de cena
+   ============================================================ */
+
+:root {
+  --black:        #050505;
+  --black-deep:   #0A0A0A;
+  --ink:          #E8E4DC;
+  --gray:         #242424;
+  --red:          #8B0000;
+  --gold:         #D99A20;
+
+  --ink-dim:   rgba(232, 228, 220, 0.55);
+  --ink-faint: rgba(232, 228, 220, 0.28);
+  --ink-ghost: rgba(232, 228, 220, 0.10);
+
+  --font-title : "Cormorant Garamond", "Times New Roman", serif;
+  --font-text   : "Spectral", Georgia, serif;
+  --font-hand   : "Caveat", "Segoe Script", cursive;
+
+  --ease-cine: cubic-bezier(0.22, 0.61, 0.24, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--black);
+}
+
+body {
+  font-family: var(--font-text);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  user-select: none;
+}
+
+::selection { background: rgba(139, 0, 0, 0.35); color: var(--ink); }
+
+button { font-family: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+
+/* ---------- Camada de partículas ---------- */
+#fx-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ---------- Palco / cenas ---------- */
+#stage {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 2;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(20px, 5vh, 64px) clamp(18px, 5vw, 64px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 1.4s var(--ease-cine), visibility 0s linear 1.4s;
+}
+
+.scene.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 1.4s var(--ease-cine), visibility 0s;
+}
+
+/* Vinheta cinematográfica discreta sobre tudo */
+.scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center,
+              transparent 45%,
+              rgba(0, 0, 0, 0.55) 100%);
+}
+
+.scene > * { position: relative; z-index: 1; }
+
+/* ---------- Botões minimalistas ---------- */
+.btn {
+  font-family: var(--font-text);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  padding: 14px 34px;
+  border: 1px solid rgba(232, 228, 220, 0.14);
+  background: rgba(5, 5, 5, 0.35);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 1.2s var(--ease-cine),
+              transform 1.2s var(--ease-cine),
+              color 0.6s ease,
+              border-color 0.6s ease,
+              letter-spacing 0.6s ease;
+}
+
+.btn.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.btn:hover,
+.btn:focus-visible {
+  color: var(--ink);
+  border-color: rgba(232, 228, 220, 0.4);
+  outline: none;
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn[hidden] { display: none; }
+
+.scene > .btn { margin-top: clamp(18px, 4vh, 38px); }
+
+/* Botão selo — levemente mais orgânico (capa de envelope) */
+.btn--seal {
+  border-radius: 50% / 18%;
+  letter-spacing: 0.3em;
+}
+
+/* ---------- Palavras susurradas (falas da história) ---------- */
+.whisper {
+  font-family: var(--font-title);
+  font-size: clamp(19px, 2.6vw, 30px);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.05em;
+  line-height: 1.7;
+  color: rgba(232, 228, 220, 0.82);
+  text-align: center;
+  min-height: 1.7em;
+}
+
+.whisper--low {
+  font-size: clamp(15px, 1.9vw, 21px);
+  color: var(--ink-dim);
+  margin-top: 1.6em;
+}
+
+.whisper .caret,
+.intro__line .caret {
+  display: inline-block;
+  width: 1px;
+  margin-left: 2px;
+  background: rgba(232, 228, 220, 0.6);
+  animation: blink 1.05s steps(1) infinite;
+}
+
+/* Cursor de escrita (qualquer contexto) */
+.caret {
+  display: inline-block;
+  width: 1px;
+  margin-left: 1px;
+  background: rgba(232, 228, 220, 0.6);
+  animation: blink 1.05s steps(1) infinite;
+}
+
+.rule__text { white-space: pre-wrap; display: block; }
+
+/* ---------- Indicador "TOCAR" ---------- */
+.intro__hint {
+  position: absolute;
+  bottom: clamp(34px, 9vh, 90px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  letter-spacing: 0.5em;
+  text-indent: 0.5em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  opacity: 0;
+  transition: opacity 1.6s ease;
+}
+
+.intro__hint.is-visible { opacity: 1; animation: breathe 3.4s ease-in-out infinite; }
+
+/* ---------- Ornamentos tipográficos ---------- */
+.ornament {
+  display: block;
+  position: relative;
+  width: 150px;
+  height: 14px;
+  margin: 0 auto;
+  opacity: 0;
+  transition: opacity 1.6s ease;
+}
+
+.ornament.is-visible { opacity: 1; }
+
+.ornament::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+              transparent,
+              rgba(232, 228, 220, 0.35) 25%,
+              rgba(232, 228, 220, 0.35) 75%,
+              transparent);
+}
+
+.ornament::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: var(--red);
+  box-shadow: 0 0 6px rgba(139, 0, 0, 0.7);
+}
+
+/* ---------- Controle de som ---------- */
+.sound {
+  position: fixed;
+  top: clamp(14px, 3vh, 28px);
+  right: clamp(14px, 3vw, 28px);
+  z-index: 40;
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+  color: var(--ink-faint);
+  padding: 8px 12px;
+  border: 1px solid rgba(232, 228, 220, 0.1);
+  opacity: 0;
+  transition: opacity 1s ease, color 0.5s ease, border-color 0.5s ease;
+}
+
+.sound.is-visible { opacity: 0.75; }
+.sound:hover { color: var(--ink-dim); border-color: rgba(232, 228, 220, 0.3); }
+.sound.is-muted { text-decoration: line-through; color: rgba(232, 228, 220, 0.18); }
+
+/* ---------- Acessibilidade: movimento reduzido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.2s !important;
+  }
+}

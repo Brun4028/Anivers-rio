@@ -1,0 +1,11 @@
+{
+  "name": "isadoras-note",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Experiência web interativa de aniversário — HTML + CSS + JS puros.",
+  "type": "module",
+  "scripts": {
+    "dev": "node tools/serve.mjs",
+    "verify": "node tools/verify.mjs"
+  }
+}
