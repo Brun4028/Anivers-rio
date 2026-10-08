@@ -177,6 +177,17 @@
       nib.style.left = (a.right - b.left - 1.5) + "px";
       nib.style.top = (a.top - b.top + a.height * 0.76) + "px";
       nib.classList.add("is-on");
+
+      /* acompanha a pena: rola a carta em passos discretos */
+      const scroller = el.closest(".letter");
+      if (scroller) {
+        const sr = scroller.getBoundingClientRect();
+        if (a.bottom > sr.bottom - 34) {
+          scroller.scrollTop += Math.max(28, a.bottom - sr.bottom + 72);
+        } else if (a.top < sr.top + 34) {
+          scroller.scrollTop -= Math.max(28, sr.top - a.top + 72);
+        }
+      }
     }
 
     function finish() {
@@ -566,9 +577,11 @@
   async function enterDragon(t) {
     FX.setDust(0.8);
     const dragon = $("dragon");
-    dragon.classList.remove("is-in");
-    void dragon.offsetWidth;
-    dragon.classList.add("is-in");
+    if (dragon) {
+      dragon.classList.remove("is-in");
+      void dragon.offsetWidth;
+      dragon.classList.add("is-in");
+    }
     SFX.dragon();
 
     const dobj = $("dragon-orbit");
@@ -844,24 +857,48 @@
     $("gift-hint").classList.remove("is-visible");
     gift.classList.add("is-opening");
     FX.burst(window.innerWidth / 2, window.innerHeight / 2,
-      { color: "rgba(217, 154, 32, @A)", count: 34, speed: 2.4, life: 70 });
+      { color: "rgba(255, 214, 140, @A)", count: 16, speed: 1.6, life: 60 });
 
-    await sleep(2400);
+    /* 1. o presente se abre */
+    await sleep(2000);
     if (!alive(t)) return;
     gift.classList.add("is-gone");
 
-    await sleep(700);
+    await sleep(650);
     if (!alive(t)) return;
 
-    /* carta */
-    const letter = $("letter");
-    letter.hidden = false;
-    const textEl = $("letter-text");
+    /* 2. um envelope especial surge de dentro do presente */
+    const envelope = $("envelope");
+    envelope.hidden = false;
+    void envelope.offsetWidth;
+    envelope.classList.add("is-rise");
+    await sleep(2000);
+    if (!alive(t)) return;
+
+    /* o envelope fica centralizado por um instante, depois se abre */
+    await sleep(700);
+    if (!alive(t)) return;
+    SFX.ink();
+    envelope.classList.add("is-open");
+
     await sleep(1500);
     if (!alive(t)) return;
-    /* carta: escrita à mão, tinta escura sobre papel */
+
+    /* a folha sai devagar de dentro do envelope e se assenta */
+    const letter = $("letter");
+    const textEl = $("letter-text");
+    textEl.textContent = "";
+    letter.hidden = false;
+    void letter.offsetWidth;
+    letter.classList.add("is-out");
+    envelope.classList.add("is-away");
+
+    await sleep(2400);
+    if (!alive(t)) return;
+
+    /* a carta se escreve à mão, letra a letra */
     await writeInk(textEl, letterText(), t,
-      { charMs: 15, sentencePause: 340, nib: true, sound: 0.1 });
+      { charMs: 22, sentencePause: 520, nib: true, sound: 0.12 });
     if (!alive(t)) return;
     document.querySelector(".letter__seal").classList.add("is-visible");
     SFX.ink();
@@ -876,7 +913,13 @@
     gift.dataset.opened = "";
     gift.classList.remove("is-opening", "is-gone");
     $("gift-hint").classList.add("is-visible");
-    $("letter").hidden = true;
+    const envelope = $("envelope");
+    envelope.hidden = true;
+    envelope.classList.remove("is-rise", "is-open", "is-away");
+    const letter = $("letter");
+    letter.hidden = true;
+    letter.scrollTop = 0;
+    letter.classList.remove("is-out");
     $("letter-text").textContent = "";
     document.querySelector(".letter__seal").classList.remove("is-visible");
     hideBtn($("btn-letter"));
@@ -915,8 +958,6 @@
     document.querySelector(".ornament--end").classList.remove("is-visible");
     hideBtn($("btn-restart"));
     ["final-1", "final-2", "final-3"].forEach(function (id) { $(id).textContent = ""; });
-
-    $("dragon-ghost").classList.add("is-in");
 
     await sleep(1600);
     if (!alive(t)) return;

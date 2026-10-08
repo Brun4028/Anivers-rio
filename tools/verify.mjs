@@ -382,10 +382,12 @@ function check(results, label, failures) {
     "texto da REGRA Nº 3: " + JSON.stringify(results.final.rule));
   f(results.final.count === "7", "contador de esferas: " + JSON.stringify(results.final.count));
   f(results.final.spheresActive === 7, "esferas em órbita: " + results.final.spheresActive);
-  f((results.final.letter || "").startsWith("[Isadora,"),
-    "carta placeholder ausente");
-  f((results.final.letter || "").endsWith("Que o melhor ainda esteja por vir.]"),
-    "carta não termina como esperado");
+  f((results.final.letter || "").startsWith("Isadora,"),
+    "carta deve começar em \"Isadora,\": " + JSON.stringify((results.final.letter || "").slice(0, 24)));
+  f((results.final.letter || "").endsWith("Que o melhor ainda esteja por vir."),
+    "carta deve terminar em \"Que o melhor ainda esteja por vir.\": " + JSON.stringify((results.final.letter || "").slice(-32)));
+  f(!/[\[\]]/.test(results.final.letter || ""),
+    "carta ainda contém colchetes");
 }
 
 /* ---------------- execução ---------------- */

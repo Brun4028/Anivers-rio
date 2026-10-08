@@ -35,6 +35,8 @@ const MIME = {
   ".wav": "audio/wav",
   ".woff": "font/woff",
   ".woff2": "font/woff2",
+  ".ttf": "font/ttf",
+  ".otf": "font/otf",
   ".txt": "text/plain; charset=utf-8",
   ".md": "text/plain; charset=utf-8"
 };
@@ -65,7 +67,20 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(PORT, () => {
-  console.log("ISADORA'S NOTE rodando em  http://localhost:" + PORT);
+let port = PORT;
+
+server.on("error", (err) => {
+  if (err.code === "EADDRINUSE") {
+    console.warn("Porta " + port + " já está em uso, tentando " + (port + 1) + "…");
+    port += 1;
+    server.listen(port);
+  } else {
+    console.error(err);
+    process.exit(1);
+  }
+});
+
+server.listen(port, () => {
+  console.log("ISADORA'S NOTE rodando em  http://localhost:" + port);
   console.log("Pressione Ctrl+C para encerrar.");
 });

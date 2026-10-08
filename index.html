@@ -101,30 +101,6 @@
       <span class="cosmos__mote" style="--x: 67%; --d: -8.1s"></span>
       <span class="cosmos__mote" style="--x: 76%; --d: -5.4s"></span>
     </div>
-    <div class="dragon" id="dragon" aria-hidden="true">
-      <span class="dragon__glow"></span>
-      <svg class="dragon__svg" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid meet">
-        <g class="dragon__silhouette">
-          <path d="M60 600 C 150 640 240 600 300 545" />
-          <path d="M290 555 C 370 500 400 445 430 405" />
-          <path d="M420 425 C 455 355 485 320 550 302" />
-          <path d="M540 308 C 615 272 695 325 760 302" />
-          <path d="M750 304 C 815 284 845 242 893 220" />
-          <path d="M885 222 C 915 206 935 199 958 196" />
-          <path class="dragon__head" d="M938 202 C 972 180 1018 158 1068 152 C 1092 149 1102 160 1093 173 C 1083 187 1055 191 1035 197 C 1060 205 1079 215 1083 228 C 1087 242 1070 248 1051 241 C 1024 232 994 233 974 241 C 949 250 931 241 927 225 C 924 213 929 207 938 202 Z" />
-          <path class="dragon__horn" d="M998 170 C 984 141 951 121 916 113 C 946 130 970 148 986 174 Z" />
-          <path class="dragon__horn" d="M1024 164 C 1018 137 999 116 974 103 C 998 123 1014 143 1019 169 Z" />
-          <path class="dragon__whisker" d="M1090 178 C 1122 171 1152 177 1172 191" />
-          <path class="dragon__whisker" d="M1076 233 C 1106 245 1128 263 1136 283" />
-          <path class="dragon__fin" d="M470 340 L 452 300 L 488 328 Z" />
-          <path class="dragon__fin" d="M560 292 L 552 250 L 588 284 Z" />
-          <path class="dragon__fin" d="M666 310 L 668 268 L 700 306 Z" />
-          <path class="dragon__fin" d="M812 276 L 822 236 L 846 282 Z" />
-          <path class="dragon__fin" d="M352 505 L 336 468 L 374 492 Z" />
-        </g>
-        <ellipse class="dragon__eye" cx="1023" cy="187" rx="7" ry="5" />
-      </svg>
-    </div>
     <div class="orbit orbit--sm" id="dragon-orbit" aria-hidden="true"></div>
     <div class="dragon__lines">
       <p class="whisper" id="dragon-q"></p>
@@ -149,9 +125,49 @@
             <div class="name-block__writing">
               <span class="name-block__name" id="written-name"></span>
               <span class="pen" id="pen" aria-hidden="true">
-                <svg viewBox="0 0 40 150" preserveAspectRatio="none">
-                  <path d="M20 0 L27 24 L27 112 L20 148 L13 112 L13 24 Z" />
-                  <path class="pen__nib" d="M20 112 L24 132 L20 148 L16 132 Z" />
+                <svg viewBox="0 0 40 150" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="pen-body" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stop-color="#07070a" />
+                      <stop offset="22%" stop-color="#2b2b33" />
+                      <stop offset="46%" stop-color="#0b0b0e" />
+                      <stop offset="72%" stop-color="#35353e" />
+                      <stop offset="100%" stop-color="#070709" />
+                    </linearGradient>
+                    <linearGradient id="pen-gold" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stop-color="#6f5210" />
+                      <stop offset="30%" stop-color="#f4dc93" />
+                      <stop offset="52%" stop-color="#c69f27" />
+                      <stop offset="78%" stop-color="#f0d684" />
+                      <stop offset="100%" stop-color="#6a4e0f" />
+                    </linearGradient>
+                    <linearGradient id="pen-nib" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#e6c46a" />
+                      <stop offset="45%" stop-color="#fbf0c4" />
+                      <stop offset="75%" stop-color="#cda533" />
+                      <stop offset="100%" stop-color="#9c7a22" />
+                    </linearGradient>
+                    <linearGradient id="pen-sheen" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stop-color="#ffffff" stop-opacity="0" />
+                      <stop offset="45%" stop-color="#ffffff" stop-opacity="0.5" />
+                      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+                    </linearGradient>
+                  </defs>
+
+                  <rect class="pen__clip" x="26.2" y="8" width="1.9" height="47" rx="0.95" />
+                  <circle class="pen__clip" cx="27.15" cy="56.6" r="1.7" />
+                  <rect class="pen__cap-band" x="12.4" y="9.6" width="15.1" height="2.6" rx="1.3" />
+
+                  <path class="pen__body" d="M20 2 C 25.4 2 27.3 6 27.3 11 L27.3 86 L12.7 86 L12.7 11 C 12.7 6 14.6 2 20 2 Z" />
+                  <path class="pen__sheen" d="M17 5.5 C 18 5.5 18.6 7 18.6 11 L18.6 85 L17.2 85 L17.2 11 C 17.2 7 17.4 5.5 17 5.5 Z" />
+
+                  <rect class="pen__band" x="12.3" y="86" width="15.4" height="5" rx="1.7" />
+
+                  <path class="pen__grip" d="M12.7 91 L27.3 91 L24 114 L16 114 Z" />
+
+                  <path class="pen__nib" d="M16 114 L24 114 C 24 128 22.2 141 20 150 C 17.8 141 16 128 16 114 Z" />
+                  <path class="pen__slit" d="M20 123 L20 149" />
+                  <circle class="pen__breather" cx="20" cy="125" r="1.4" />
                 </svg>
               </span>
             </div>
@@ -227,9 +243,24 @@
     </div>
     <span class="intro__hint" id="gift-hint">TOCAR</span>
 
+    <!-- envelope artesanal: sai de dentro do presente e abre -->
+    <div class="envelope" id="envelope" hidden aria-hidden="true">
+      <span class="envelope__glow"></span>
+      <div class="envelope__case">
+        <span class="envelope__back"></span>
+        <span class="envelope__inner"></span>
+        <span class="envelope__sheet" id="envelope-sheet"></span>
+        <span class="envelope__pocket"></span>
+        <span class="envelope__flap"><span class="envelope__seam"></span></span>
+        <span class="envelope__wax" id="envelope-wax"></span>
+      </div>
+    </div>
+
     <article class="letter" id="letter" hidden>
       <div class="letter__paper">
         <span class="letter__edge"></span>
+        <span class="letter__corner letter__corner--tl"></span>
+        <span class="letter__corner letter__corner--br"></span>
         <div class="letter__text" id="letter-text"></div>
         <span class="letter__seal" aria-hidden="true"></span>
       </div>
@@ -239,31 +270,6 @@
 
   <!-- ============ CAPÍTULO FINAL — A MENSAGEM ============ -->
   <section class="scene" id="scene-final" aria-label="Mensagem final">
-    <div class="dragon dragon--ghost" id="dragon-ghost" aria-hidden="true">
-      <span class="dragon__glow dragon__glow--soft"></span>
-      <svg class="dragon__svg" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid meet">
-        <g class="dragon__silhouette">
-          <path d="M60 600 C 150 640 240 600 300 545" />
-          <path d="M290 555 C 370 500 400 445 430 405" />
-          <path d="M420 425 C 455 355 485 320 550 302" />
-          <path d="M540 308 C 615 272 695 325 760 302" />
-          <path d="M750 304 C 815 284 845 242 893 220" />
-          <path d="M885 222 C 915 206 935 199 958 196" />
-          <path class="dragon__head" d="M938 202 C 972 180 1018 158 1068 152 C 1092 149 1102 160 1093 173 C 1083 187 1055 191 1035 197 C 1060 205 1079 215 1083 228 C 1087 242 1070 248 1051 241 C 1024 232 994 233 974 241 C 949 250 931 241 927 225 C 924 213 929 207 938 202 Z" />
-          <path class="dragon__horn" d="M998 170 C 984 141 951 121 916 113 C 946 130 970 148 986 174 Z" />
-          <path class="dragon__horn" d="M1024 164 C 1018 137 999 116 974 103 C 998 123 1014 143 1019 169 Z" />
-          <path class="dragon__whisker" d="M1090 178 C 1122 171 1152 177 1172 191" />
-          <path class="dragon__whisker" d="M1076 233 C 1106 245 1128 263 1136 283" />
-          <path class="dragon__fin" d="M470 340 L 452 300 L 488 328 Z" />
-          <path class="dragon__fin" d="M560 292 L 552 250 L 588 284 Z" />
-          <path class="dragon__fin" d="M666 310 L 668 268 L 700 306 Z" />
-          <path class="dragon__fin" d="M812 276 L 822 236 L 846 282 Z" />
-          <path class="dragon__fin" d="M352 505 L 336 468 L 374 492 Z" />
-        </g>
-        <ellipse class="dragon__eye" cx="1023" cy="187" rx="7" ry="5" />
-      </svg>
-    </div>
-
     <div class="final__lines">
       <p class="whisper" id="final-1"></p>
       <p class="whisper" id="final-2"></p>

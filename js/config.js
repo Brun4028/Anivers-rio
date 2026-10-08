@@ -10,13 +10,13 @@ window.DN_CONFIG = {
   /* --- Dados da aniversariante --- */
   name: "ISADORA",            // como o nome deve ser escrito no livro
   displayName: "Isadora",     // como o nome aparece em frases
-  birthday: "",               // ex.: "14 de abril"  (deixe vazio para manter só o rótulo)
+  birthday: "22/10/2026",      // ex.: "14 de abril"  (deixe vazio para manter só o rótulo)
 
   /* --- Carta / mensagem pessoal -------------------------
      Edite o conteúdo abaixo. Cada string entre crases
      ( ` ) é um parágrafo da carta, na ordem.            */
   letter: [
-    `[Isadora,
+    `Isadora,
 
 se você está lendo isso, então chegou ao fim dessa pequena jornada que preparei para você.`,
 
@@ -32,7 +32,7 @@ se você está lendo isso, então chegou ao fim dessa pequena jornada que prepar
 
     `Feliz aniversário, Isadora. ❤️
 
-Que o melhor ainda esteja por vir.]`
+Que o melhor ainda esteja por vir.`
   ],
 
   /* --- Música ambiente (opcional) -----------------------

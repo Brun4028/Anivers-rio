@@ -2,6 +2,26 @@
    BASE — paleta, tipografia, palco e transições de cena
    ============================================================ */
 
+/* escrita antiga do caderno sobrenatural — Cloister Black
+   (freeware de Dieter Steffmann / Typographer Mediengestaltung) */
+@font-face {
+  font-family: "Cloister Black";
+  src: url("../assets/fonts/CloisterBlack.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* escrita pessoal e delicada da carta — Dancing Script
+   (fonte livre do Google Fonts, SIL Open Font License) */
+@font-face {
+  font-family: "Dancing Script";
+  src: url("../assets/fonts/DancingScript.ttf") format("truetype");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --black:        #050505;
   --black-deep:   #0A0A0A;
@@ -16,9 +36,13 @@
 
   --font-title : "Cormorant Garamond", "Times New Roman", serif;
   --font-text   : "Spectral", Georgia, serif;
-  /* escrita manual de caderno: simples, natural e legível
-     (letra de caneta, sem aparência caligráfica ou digital) */
-  --font-hand   : "Architects Daughter", "Segoe Print", "Comic Sans MS", cursive;
+  /* escrita antiga de caderno: Cloister Black como referência
+     principal (letra gótica/middle-evil, sombria e elegante),
+     com Architects Daughter como reserva caso o arquivo local
+     não carregue */
+  --font-hand   : "Cloister Black", "Architects Daughter", "Segoe Print", cursive;
+  /* carta pessoal: manuscrita delicada e romântica (ref. Brittany Signature) */
+  --font-letter : "Dancing Script", "Segoe Script", "Brush Script MT", cursive;
   /* tinta clara sobre a folha escura do caderno */
   --ink-page    : rgba(232, 228, 220, 0.88);
 

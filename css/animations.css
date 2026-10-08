@@ -72,6 +72,30 @@
   100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
 }
 
+/* ---------- o envelope sai de dentro do presente ---------- */
+@keyframes envelopeRise {
+  0%   { opacity: 0; transform: translate(-50%, -50%) translateY(52%) scale(0.42) rotate(-2.5deg); }
+  45%  { opacity: 1; }
+  78%  { transform: translate(-50%, -50%) translateY(-4%) scale(1.03) rotate(0.6deg); }
+  100% { opacity: 1; transform: translate(-50%, -50%) translateY(0) scale(1) rotate(0deg); }
+}
+
+/* o envelope recolhe e desvanece enquanto a folha se firma */
+@keyframes envelopeAway {
+  0%   { opacity: 1; transform: translate(-50%, -50%) translateY(0) scale(1); }
+  60%  { opacity: 1; transform: translate(-50%, -50%) translateY(3%) scale(0.99); }
+  100% { opacity: 0; transform: translate(-50%, -50%) translateY(9%) scale(0.92); }
+}
+
+/* a folha desliza para fora do envelope e se acomoda na tela */
+@keyframes letterOut {
+  0%   { opacity: 0; transform: translateY(46%) scale(0.26) rotate(-1.6deg); }
+  16%  { opacity: 1; }
+  58%  { opacity: 1; transform: translateY(-5%) scale(0.74) rotate(-0.5deg); }
+  82%  { transform: translateY(1.4%) scale(1.015) rotate(0.15deg); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+}
+
 /* ---------- escrita à mão: a tinta assenta no papel ---------- */
 @keyframes inkStroke {
   0% {
@@ -88,6 +112,12 @@
     transform: translate(0, var(--jy, 0)) rotate(var(--jr, 0)) scale(1);
     filter: blur(0);
   }
+}
+
+/* ---------- destaque sutil da caneta durante a escrita ---------- */
+@keyframes penGlow {
+  0%, 100% { filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.65)) drop-shadow(0 0 4px rgba(217, 154, 32, 0.22)); }
+  50%      { filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.65)) drop-shadow(0 0 10px rgba(217, 154, 32, 0.5)); }
 }
 
 /* ---------- atmosfera da cena dos animais ---------- */
