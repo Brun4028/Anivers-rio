@@ -7,7 +7,7 @@
 <meta name="description" content="Uma experiência de aniversário.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,300&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/scenes.css">
 <link rel="stylesheet" href="css/animations.css">
@@ -35,7 +35,7 @@
           <span class="book__edge book__edge--l"></span>
           <span class="book__grain"></span>
           <span class="book__ornament"></span>
-          <h1 class="book__title">ISADORA'S NOTE</h1>
+          <h1 class="book__title">BIRTHDAY NOTE</h1>
           <span class="book__rule"></span>
           <span class="book__corner book__corner--tl"></span>
           <span class="book__corner book__corner--tr"></span>
@@ -82,6 +82,25 @@
 
   <!-- ============ CAPÍTULO 3 — O DESEJO ============ -->
   <section class="scene" id="scene-dragon" aria-label="O desejo">
+    <div class="cosmos" aria-hidden="true">
+      <!-- fundo opcional: coloque assets/img/dragon-bg.webp -->
+      <img class="cosmos__photo" src="assets/img/dragon-bg.webp" alt=""
+           onload="this.parentNode.classList.add('has-photo')"
+           onerror="this.remove()">
+      <span class="cosmos__veil"></span>
+      <span class="cosmos__sky"></span>
+      <span class="cosmos__stars"></span>
+      <span class="cosmos__ridge cosmos__ridge--rim"></span>
+      <span class="cosmos__ridge cosmos__ridge--far"></span>
+      <span class="cosmos__ridge cosmos__ridge--near"></span>
+      <span class="cosmos__glow"></span>
+      <span class="cosmos__mote" style="--x: 26%; --d: -1.5s"></span>
+      <span class="cosmos__mote" style="--x: 38%; --d: -4.2s"></span>
+      <span class="cosmos__mote" style="--x: 49%; --d: -6.8s"></span>
+      <span class="cosmos__mote" style="--x: 58%; --d: -2.9s"></span>
+      <span class="cosmos__mote" style="--x: 67%; --d: -8.1s"></span>
+      <span class="cosmos__mote" style="--x: 76%; --d: -5.4s"></span>
+    </div>
     <div class="dragon" id="dragon" aria-hidden="true">
       <span class="dragon__glow"></span>
       <svg class="dragon__svg" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid meet">
@@ -177,26 +196,17 @@
 
   <!-- ============ CAPÍTULO 6 — OS ANIMAIS ============ -->
   <section class="scene" id="scene-animals" aria-label="Os animais">
-    <div class="critters" aria-hidden="true">
-      <svg class="critter critter--cat" viewBox="0 0 150 130">
-        <g>
-          <path class="critter__tail" d="M42 112 C 22 112 12 96 20 80 C 26 68 42 66 48 76" />
-          <path d="M44 118 C 38 94 44 70 62 58 C 72 51 84 48 94 50 C 108 53 118 66 120 82 C 122 98 120 110 120 118 Z" />
-          <path d="M74 44 L 68 18 L 92 36 Z" />
-          <path d="M110 34 L 124 12 L 124 42 Z" />
-          <path d="M76 34 C 76 18 90 8 106 10 C 120 12 128 24 126 38 C 124 52 112 60 98 58 C 86 56 76 48 76 34 Z" />
-          <rect x="104" y="92" width="11" height="27" rx="5" />
-        </g>
-      </svg>
-      <svg class="critter critter--dog" viewBox="0 0 170 130">
-        <g>
-          <path class="critter__tail" d="M38 84 C 22 76 18 56 30 44" />
-          <path d="M34 70 C 44 54 70 46 96 48 C 118 50 134 58 142 72 L 146 104 L 134 104 L 130 84 L 124 104 L 112 104 L 108 82 L 66 84 L 62 104 L 50 104 L 46 82 L 40 104 L 30 104 Z" />
-          <path d="M136 56 C 136 40 148 28 162 30 C 172 32 176 42 174 52 L 176 60 C 176 68 168 74 158 74 C 146 74 136 68 136 56 Z" />
-          <path d="M168 52 L 168 70 C 174 72 178 78 176 84 L 156 82 C 152 76 152 66 156 58 Z" />
-          <path d="M140 34 C 128 28 122 44 128 60 C 132 70 144 72 148 62 Z" />
-        </g>
-      </svg>
+    <!-- atmosfera: luz, sombra, partículas e tipografia (sem desenhos) -->
+    <div class="room" aria-hidden="true">
+      <span class="room__beam"></span>
+      <span class="room__pool"></span>
+      <span class="room__cast room__cast--a"></span>
+      <span class="room__cast room__cast--b"></span>
+      <span class="room__mote" style="--x: 31%; --d: -1.4s"></span>
+      <span class="room__mote" style="--x: 43%; --d: -6.2s"></span>
+      <span class="room__mote" style="--x: 55%; --d: -9.8s"></span>
+      <span class="room__mote" style="--x: 66%; --d: -3.7s"></span>
+      <span class="room__mote" style="--x: 74%; --d: -12.6s"></span>
     </div>
     <div class="animals__lines">
       <p class="whisper" id="animal-line-1"></p>

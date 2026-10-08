@@ -223,10 +223,38 @@
 .page {
   position: relative;
   flex: 1;
+  /* folha escura do caderno: preto e cinza quase preto,
+     textura discreta e iluminação mínima */
   background:
-    radial-gradient(ellipse at 30% 20%, rgba(232, 228, 220, 0.035), transparent 60%),
+    radial-gradient(ellipse at 30% 18%, rgba(232, 228, 220, 0.05), transparent 60%),
+    radial-gradient(ellipse at 76% 88%, rgba(139, 0, 0, 0.07), transparent 58%),
     linear-gradient(160deg, #0d0d0c 0%, #080808 60%, #060606 100%);
   overflow: hidden;
+}
+
+/* fio de margem do caderno (hairline vermelha esmaecida) */
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 4%;
+  width: 1px;
+  background: rgba(139, 0, 0, 0.42);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* sombreamento nas bordas da folha + brilho dourado sutil */
+.page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse at 50% 50%, transparent 46%, rgba(0, 0, 0, 0.55) 100%),
+    radial-gradient(ellipse at 88% 6%, rgba(217, 154, 32, 0.06), transparent 42%);
+  pointer-events: none;
 }
 
 .page--left {
@@ -249,6 +277,7 @@
   font-size: 10px;
   letter-spacing: 0.3em;
   color: rgba(232, 228, 220, 0.16);
+  z-index: 2;
 }
 .page__num--r { bottom: 4.5%; }
 
@@ -256,14 +285,14 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: var(--font-title);
-  font-style: italic;
-  font-size: clamp(13px, 1.5vw, 17px);
+  transform: translate(-50%, -50%) rotate(-1.2deg);
+  font-family: var(--font-hand);
+  font-size: clamp(14px, 1.6vw, 18px);
   line-height: 2.1;
   text-align: center;
-  color: rgba(232, 228, 220, 0.16);
-  letter-spacing: 0.08em;
+  color: rgba(232, 228, 220, 0.3);
+  letter-spacing: 0.02em;
+  z-index: 2;
 }
 
 /* página que vira */
@@ -283,7 +312,7 @@
 }
 .page-flip.is-turning { animation: pageTurn 1.5s var(--ease-cine); }
 
-/* brilho dourado na página */
+/* brilho dourado banhando a folha (a escrita termina) */
 .page__glow {
   position: absolute;
   inset: -10%;
@@ -297,24 +326,29 @@
 }
 .page__glow.is-on { opacity: 1; }
 
-/* conteúdo da regra */
+/* conteúdo da regra — escrito à mão, tinta clara na folha escura */
 .rule {
-  padding: clamp(18px, 5%, 54px);
+  position: relative;
+  z-index: 2;
+  --ink-shadow: 0 0 0.5px rgba(0, 0, 0, 0.85), 0 0 9px rgba(217, 154, 32, 0.12);
+  --ink-nib: rgba(255, 232, 196, 0.95);
+  padding: clamp(18px, 5%, 54px) clamp(18px, 6%, 54px) clamp(18px, 5%, 54px) clamp(30px, 9%, 64px);
   font-family: var(--font-hand);
   font-size: clamp(17px, 2.3vw, 26px);
   line-height: 2.05;
-  color: rgba(232, 228, 220, 0.88);
+  color: var(--ink-page);
   letter-spacing: 0.015em;
   min-height: 6em;
 }
 
 .rule__no {
   display: block;
-  font-size: 0.78em;
-  letter-spacing: 0.4em;
+  white-space: pre-wrap;
+  font-size: 0.7em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: rgba(217, 154, 32, 0.75);
-  margin-bottom: 1.6em;
+  color: rgba(217, 154, 32, 0.78);
+  margin-bottom: 1.5em;
 }
 
 .rule__no::after {
@@ -324,7 +358,13 @@
   height: 1px;
   margin-top: 1.1em;
   background: rgba(139, 0, 0, 0.75);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.2s var(--ease-cine);
 }
+
+/* o filete só é traçado depois que o título termina de ser escrito */
+.rule__no.ink-done::after { transform: scaleX(1); }
 
 .rule__text { display: block; }
 
@@ -453,6 +493,16 @@
   height: min(52vmin, 430px);
   transform: translate(-50%, -50%);
   z-index: 2;
+  /* decorativa: nunca pode interceptar cliques/tocos */
+  pointer-events: none;
+}
+
+/* órbita da cena do dragão: um pouco menor e mais acima,
+   para separar esferas, fala e botão */
+#scene-dragon .orbit--sm {
+  top: 42%;
+  width: min(58vmin, 430px);
+  height: min(58vmin, 430px);
 }
 
 .orbit__core {
@@ -578,6 +628,224 @@
   width: min(90vw, 640px);
   text-align: center;
   z-index: 3;
+  pointer-events: none; /* texto decorativo: não pode cobrir o botão */
+}
+
+/* ============================================================
+   CENA DO DESEJO — cenário cósmico original
+   céu profundo + horizonte rochoso + luz dourada crescente
+   ============================================================ */
+
+#scene-dragon { background: #04040a; }
+
+#scene-dragon .cosmos {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* fundo opcional: assets/img/dragon-bg.webp (se existir, substitui o cenário) */
+#scene-dragon .cosmos__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 34%;
+  opacity: 0;
+  filter: brightness(0.5) saturate(0.92) contrast(1.06);
+  transition: opacity 2.4s ease;
+}
+
+/* tratamento cinematográfico escuro sobre a imagem */
+#scene-dragon .cosmos__veil { display: none; }
+
+#scene-dragon .cosmos.has-photo .cosmos__photo { opacity: 1; }
+
+#scene-dragon .cosmos.has-photo .cosmos__veil {
+  display: block;
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg,
+      rgba(2, 2, 6, 0.8) 0%,
+      rgba(2, 2, 6, 0.32) 36%,
+      rgba(2, 2, 6, 0.58) 70%,
+      rgba(2, 2, 6, 0.94) 100%),
+    radial-gradient(ellipse at 50% 46%, transparent 28%, rgba(0, 0, 0, 0.74) 100%);
+}
+
+/* o cenário procedural fica escondido quando a foto existe */
+#scene-dragon .cosmos.has-photo .cosmos__sky,
+#scene-dragon .cosmos.has-photo .cosmos__stars,
+#scene-dragon .cosmos.has-photo .cosmos__ridge { display: none; }
+
+/* céu cósmico: azul profundo no topo, quente em direção ao horizonte */
+#scene-dragon .cosmos__sky {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 55% 38% at 20% 15%, rgba(36, 72, 140, 0.30), transparent 64%),
+    radial-gradient(ellipse 46% 30% at 80% 23%, rgba(22, 52, 112, 0.24), transparent 66%),
+    radial-gradient(ellipse 72% 40% at 52% 4%, rgba(52, 86, 156, 0.15), transparent 72%),
+    radial-gradient(ellipse 85% 54% at 50% 106%, rgba(217, 154, 32, 0.42), rgba(180, 83, 26, 0.18) 44%, transparent 74%),
+    linear-gradient(180deg,
+      #03040a 0%,
+      #060b18 24%,
+      #0a1226 44%,
+      #101733 58%,
+      #15162a 68%,
+      #12101a 76%,
+      #0a0809 86%,
+      #050505 100%);
+}
+
+/* poeira de estrelas, discreta e fria */
+#scene-dragon .cosmos__stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1.4px 1.4px at 11% 11%, rgba(255, 255, 255, 0.9), transparent 100%),
+    radial-gradient(1.2px 1.2px at 24% 6%, rgba(206, 226, 255, 0.8), transparent 100%),
+    radial-gradient(1.1px 1.1px at 37% 16%, rgba(255, 255, 255, 0.65), transparent 100%),
+    radial-gradient(1.5px 1.5px at 48% 8%, rgba(255, 240, 214, 0.85), transparent 100%),
+    radial-gradient(1.1px 1.1px at 61% 14%, rgba(206, 226, 255, 0.7), transparent 100%),
+    radial-gradient(1.3px 1.3px at 73% 7%, rgba(255, 255, 255, 0.8), transparent 100%),
+    radial-gradient(1.1px 1.1px at 86% 17%, rgba(255, 240, 214, 0.65), transparent 100%),
+    radial-gradient(1.2px 1.2px at 94% 9%, rgba(206, 226, 255, 0.75), transparent 100%),
+    radial-gradient(1.1px 1.1px at 7% 25%, rgba(255, 255, 255, 0.55), transparent 100%),
+    radial-gradient(1.4px 1.4px at 31% 30%, rgba(255, 240, 214, 0.6), transparent 100%),
+    radial-gradient(1.1px 1.1px at 55% 26%, rgba(255, 255, 255, 0.55), transparent 100%),
+    radial-gradient(1.3px 1.3px at 68% 33%, rgba(206, 226, 255, 0.6), transparent 100%),
+    radial-gradient(1.1px 1.1px at 81% 28%, rgba(255, 255, 255, 0.5), transparent 100%),
+    radial-gradient(1.2px 1.2px at 93% 35%, rgba(255, 240, 214, 0.5), transparent 100%),
+    radial-gradient(1.1px 1.1px at 16% 38%, rgba(255, 255, 255, 0.45), transparent 100%),
+    radial-gradient(1.2px 1.2px at 43% 41%, rgba(206, 226, 255, 0.45), transparent 100%);
+  animation: starBreathe 7.5s ease-in-out infinite;
+}
+
+@keyframes starBreathe {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+/* linha dourada acima das montanhas (luz de borda) */
+#scene-dragon .cosmos__ridge {
+  position: absolute;
+  left: -2%;
+  width: 104%;
+  bottom: 0;
+}
+
+#scene-dragon .cosmos__ridge--rim {
+  height: 33%;
+  transform: translateY(-2px);
+  background: linear-gradient(180deg,
+              rgba(255, 186, 92, 0.7),
+              rgba(255, 150, 60, 0.22) 34%,
+              transparent 62%);
+  clip-path: polygon(0 100%, 0 64%, 6% 52%, 12% 60%, 19% 38%, 26% 52%, 33% 30%,
+                     41% 46%, 47% 26%, 55% 44%, 62% 32%, 70% 50%, 77% 36%,
+                     85% 54%, 92% 42%, 100% 58%, 100% 100%);
+}
+
+#scene-dragon .cosmos__ridge--far {
+  height: 33%;
+  background: linear-gradient(180deg,
+              rgba(44, 31, 20, 0.94) 0%,
+              rgba(17, 14, 15, 0.97) 42%,
+              #07070a 100%);
+  clip-path: polygon(0 100%, 0 64%, 6% 52%, 12% 60%, 19% 38%, 26% 52%, 33% 30%,
+                     41% 46%, 47% 26%, 55% 44%, 62% 32%, 70% 50%, 77% 36%,
+                     85% 54%, 92% 42%, 100% 58%, 100% 100%);
+}
+
+#scene-dragon .cosmos__ridge--near {
+  height: 23%;
+  background: linear-gradient(180deg, #0b0a0b 0%, #070707 55%, #040404 100%);
+  clip-path: polygon(0 100%, 0 56%, 7% 44%, 15% 58%, 23% 34%, 31% 50%, 39% 30%,
+                     47% 48%, 55% 28%, 64% 46%, 72% 32%, 80% 50%, 88% 36%,
+                     95% 52%, 100% 44%, 100% 100%);
+}
+
+/* brilho quente subindo do horizonte (poder mágico crescendo) */
+#scene-dragon .cosmos__glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 72% 42% at 50% 98%,
+              rgba(255, 172, 64, 0.30),
+              rgba(217, 154, 32, 0.13) 46%,
+              transparent 74%);
+  animation: energyRise 7s ease-in-out infinite;
+}
+
+@keyframes energyRise {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.03); }
+}
+
+/* brasas sutis subindo */
+#scene-dragon .cosmos__mote {
+  position: absolute;
+  bottom: 9%;
+  left: var(--x, 50%);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 206, 128, 0.95);
+  box-shadow: 0 0 8px rgba(255, 178, 78, 0.85);
+  opacity: 0;
+  animation: emberRise 10s linear infinite;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes emberRise {
+  0%   { opacity: 0; transform: translate3d(0, 0, 0) scale(0.5); }
+  12%  { opacity: 0.9; }
+  70%  { opacity: 0.5; transform: translate3d(10px, -38vh, 0) scale(0.9); }
+  100% { opacity: 0; transform: translate3d(18px, -52vh, 0) scale(1); }
+}
+
+/* dragão visível: corpo bronzado quente + halo dourado (não é silhueta preta) */
+#scene-dragon .dragon__svg {
+  filter:
+    drop-shadow(0 0 2px rgba(255, 216, 150, 0.55))
+    drop-shadow(0 0 16px rgba(217, 154, 32, 0.40))
+    drop-shadow(0 0 46px rgba(196, 96, 28, 0.26));
+}
+
+#scene-dragon .dragon__silhouette { stroke: #241708; }
+#scene-dragon .dragon__silhouette .dragon__head,
+#scene-dragon .dragon__silhouette .dragon__fin,
+#scene-dragon .dragon__silhouette .dragon__horn { fill: #2b1c0b; }
+
+#scene-dragon .dragon__glow {
+  background:
+    radial-gradient(ellipse at 62% 46%,
+              rgba(255, 186, 84, 0.26) 0%,
+              rgba(217, 154, 32, 0.14) 34%,
+              rgba(56, 92, 164, 0.08) 58%,
+              transparent 76%);
+}
+
+/* CONTINUAR: acima de tudo nesta cena, com contraste garantido */
+#scene-dragon .btn {
+  position: relative;
+  z-index: 6;
+  pointer-events: auto;
+  padding: 16px 42px;
+  color: rgba(255, 238, 208, 0.88);
+  background: rgba(6, 6, 9, 0.74);
+  border-color: rgba(255, 214, 140, 0.32);
+}
+
+#scene-dragon .btn:hover,
+#scene-dragon .btn:focus-visible {
+  color: #fff6e6;
+  border-color: rgba(255, 214, 140, 0.6);
 }
 
 /* ---------------- O NOME ---------------- */
@@ -606,9 +874,10 @@
 
 .name-block__name {
   font-family: var(--font-hand);
-  font-size: clamp(42px, 7vw, 84px);
+  font-size: clamp(40px, 6.6vw, 76px);
   line-height: 1;
   color: rgba(232, 228, 220, 0.94);
+  --ink-shadow: 0 0 0.5px rgba(0, 0, 0, 0.85), 0 0 12px rgba(217, 154, 32, 0.18);
   text-shadow: 0 0 22px rgba(217, 154, 32, 0.22);
   white-space: nowrap;
 }
@@ -632,19 +901,19 @@
 .name-meta { margin-top: clamp(20px, 4.5vh, 44px); }
 
 .name-meta__line {
-  font-family: var(--font-text);
-  font-size: clamp(12px, 1.5vw, 15px);
-  letter-spacing: 0.16em;
-  color: var(--ink-dim);
-  line-height: 2.3;
+  font-family: var(--font-hand);
+  font-size: clamp(14px, 1.7vw, 17px);
+  letter-spacing: 0.02em;
+  color: rgba(232, 228, 220, 0.62);
+  line-height: 2.1;
   opacity: 0;
   transform: translateY(6px);
-  transition: opacity 1.3s var(--ease-cine), transform 1.3s var(--ease-cine);
+  transition: opacity 0.9s var(--ease-cine), transform 0.9s var(--ease-cine);
 }
 .name-meta__line.is-visible { opacity: 1; transform: translateY(0); }
 
 .name-meta__line .value {
-  color: rgba(232, 228, 220, 0.9);
+  color: rgba(232, 228, 220, 0.94);
   border-bottom: 1px dotted rgba(232, 228, 220, 0.3);
   padding-left: 8px;
 }
@@ -692,9 +961,10 @@
   padding: clamp(26px, 5vh, 48px) clamp(24px, 5vw, 58px);
   text-align: center;
   position: relative;
+  /* documento sombrio flutuando no escuro */
   background:
     radial-gradient(ellipse at 50% 0%, rgba(232, 228, 220, 0.035), transparent 55%),
-    linear-gradient(180deg, rgba(12, 12, 11, 0.92), rgba(6, 6, 6, 0.92));
+    linear-gradient(180deg, rgba(12, 12, 11, 0.94), rgba(6, 6, 6, 0.94));
   border: 1px solid rgba(232, 228, 220, 0.09);
   box-shadow: 0 34px 90px rgba(0, 0, 0, 0.85),
               inset 0 0 70px rgba(0, 0, 0, 0.7);
@@ -765,12 +1035,13 @@
 
 .sentence__list li {
   position: relative;
-  font-family: var(--font-text);
-  font-weight: 300;
-  font-size: clamp(14px, 1.9vw, 18px);
-  letter-spacing: 0.07em;
-  line-height: 1.45;
-  color: rgba(232, 228, 220, 0.88);
+  font-family: var(--font-hand);
+  font-weight: 400;
+  font-size: clamp(16px, 2.1vw, 20px);
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+  color: var(--ink-page);
+  --ink-shadow: 0 0 0.5px rgba(0, 0, 0, 0.85), 0 0 9px rgba(217, 154, 32, 0.1);
   padding: clamp(4px, 0.9vh, 8px) 0 clamp(4px, 0.9vh, 8px) 30px;
   opacity: 0;
   transform: translateX(-8px);
@@ -813,22 +1084,25 @@
 
 .sentence__forever {
   position: relative;
-  font-family: var(--font-title);
-  font-weight: 500;
-  font-size: clamp(28px, 4.8vw, 50px);
-  letter-spacing: 0.06em;
+  font-family: var(--font-hand);
+  font-weight: 400;
+  font-size: clamp(30px, 5vw, 54px);
+  line-height: 1.3;
+  letter-spacing: 0.01em;
   color: var(--ink);
+  --ink-shadow: 0 0 0.5px rgba(0, 0, 0, 0.85), 0 0 10px rgba(217, 154, 32, 0.14);
+  --ink-nib: rgba(255, 232, 196, 0.95);
   margin-top: clamp(10px, 2vh, 18px);
-  opacity: 0;
-  filter: blur(9px);
-  transition: opacity 2.4s var(--ease-cine), filter 2.4s var(--ease-cine),
-              text-shadow 2.4s ease;
+  transform: rotate(-0.8deg);
+  opacity: 1;
+  text-shadow: 0 0 44px rgba(232, 228, 220, 0.16),
+               0 0 90px rgba(217, 154, 32, 0.14);
+  transition: --ink-shadow 2.4s ease;
 }
 .sentence__forever.is-visible {
-  opacity: 1;
-  filter: blur(0);
-  text-shadow: 0 0 44px rgba(232, 228, 220, 0.2),
-               0 0 90px rgba(217, 154, 32, 0.14);
+  --ink-shadow: 0 0 0.5px rgba(0, 0, 0, 0.85),
+                0 0 12px rgba(232, 228, 220, 0.22),
+                0 0 34px rgba(217, 154, 32, 0.2);
 }
 
 /* tinta se espalhando sob a frase */
@@ -852,37 +1126,133 @@
 
 .ornament--bottom { margin-top: clamp(16px, 3vh, 28px); }
 
-/* ---------------- OS ANIMAIS ---------------- */
-.critters {
+/* ---------------- OS ANIMAIS ----------------
+   Sem desenhos/ícones: só atmosfera — facho de luz fria,
+   poça de luz no piso, duas sombras longas e discretas
+   (presença fora de quadro), poeira em suspensão e as palavras. */
+
+#scene-animals {
+  background:
+    radial-gradient(ellipse 92% 46% at 50% 114%, rgba(150, 172, 205, 0.12), transparent 62%),
+    linear-gradient(180deg, #06070a 0%, #070809 46%, #040507 100%);
+}
+
+.room {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  overflow: hidden;
+  z-index: 0;
   pointer-events: none;
 }
 
-.critter {
+/* facho de luz fria descendo do alto */
+.room__beam {
   position: absolute;
-  bottom: clamp(120px, 26vh, 240px);
-  width: clamp(84px, 11vw, 140px);
-  height: auto;
-  fill: #0c0c0c;
-  stroke: rgba(232, 228, 220, 0.4);
-  stroke-width: 1.6;
-  filter: drop-shadow(0 0 12px rgba(217, 154, 32, 0.16));
-  opacity: 0;
+  top: -18%;
+  left: 50%;
+  width: min(56vw, 580px);
+  height: 106%;
+  transform: translateX(-50%) rotate(5deg);
+  background: linear-gradient(180deg,
+              rgba(206, 222, 246, 0.32) 0%,
+              rgba(206, 222, 246, 0.14) 44%,
+              transparent 76%);
+  filter: blur(26px);
+  opacity: 0.62;
+  animation: beamBreathe 13s ease-in-out infinite;
 }
 
-.critter--cat { left: -160px; animation: strollCat 34s linear infinite; }
-.critter--dog { left: -220px; bottom: clamp(96px, 21vh, 210px); animation: strollDog 44s linear infinite 6s; }
+/* poça de luz gelada sobre o piso */
+.room__pool {
+  position: absolute;
+  left: 50%;
+  bottom: -4%;
+  width: min(88vw, 860px);
+  height: clamp(140px, 28vh, 300px);
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center,
+              rgba(214, 228, 250, 0.46) 0%,
+              rgba(214, 228, 250, 0.17) 46%,
+              transparent 74%);
+  filter: blur(10px);
+  animation: beamBreathe 13s ease-in-out infinite;
+}
 
-.critter__tail { fill: none; stroke-linecap: round; stroke-width: 5; }
+/* linha de encontro piso/parede: dá profundidade ao cômodo */
+.room::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(74px, 15vh, 150px);
+  height: 1px;
+  background: linear-gradient(90deg,
+              transparent,
+              rgba(206, 222, 246, 0.16) 26%,
+              rgba(206, 222, 246, 0.16) 74%,
+              transparent);
+  filter: blur(0.6px);
+}
+
+/* sombras longas e indistintas: nada de silhuetas reconhecíveis */
+.room__cast {
+  --cast-rot: -3deg;
+  position: absolute;
+  bottom: 4%;
+  height: clamp(58px, 12vh, 116px);
+  background: radial-gradient(ellipse at 22% 38%,
+              rgba(2, 3, 5, 0.94) 0%,
+              rgba(2, 3, 5, 0.55) 40%,
+              transparent 74%);
+  filter: blur(15px);
+  opacity: 0.6;
+  transform-origin: left center;
+  animation: castBreathe 11s ease-in-out infinite;
+}
+
+.room__cast--a {
+  left: 22%;
+  width: clamp(200px, 32vw, 420px);
+}
+
+.room__cast--b {
+  --cast-rot: 3deg;
+  right: 20%;
+  width: clamp(170px, 28vw, 360px);
+  background: radial-gradient(ellipse at 78% 38%,
+              rgba(2, 3, 5, 0.92) 0%,
+              rgba(2, 3, 5, 0.52) 40%,
+              transparent 74%);
+  transform-origin: right center;
+  animation-delay: -4.5s;
+}
+
+/* poeira grossa subindo devagar dentro da luz */
+.room__mote {
+  position: absolute;
+  bottom: 16%;
+  left: var(--x, 50%);
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(226, 236, 252, 0.95);
+  box-shadow: 0 0 7px rgba(206, 222, 246, 0.75);
+  opacity: 0;
+  animation: moteRise 15s linear infinite;
+  animation-delay: var(--d, 0s);
+}
 
 .animals__lines {
   position: relative;
   z-index: 3;
   text-align: center;
-  margin-top: clamp(140px, 34vh, 300px);
+  margin-top: clamp(0px, 4vh, 40px);
   min-height: 7em;
+}
+
+.animals__lines .whisper {
+  text-shadow: 0 0 34px rgba(0, 0, 0, 0.85),
+               0 0 90px rgba(0, 0, 0, 0.6);
 }
 
 /* ---------------- O PRESENTE / CARTA ---------------- */
@@ -968,6 +1338,26 @@
 
 .gift.is-gone { opacity: 0; transform: scale(0.9); transition: opacity 1.6s ease, transform 1.6s ease; pointer-events: none; }
 
+/* carta: o controle fica fora do papel, acima de tudo */
+#scene-gift .btn {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(14px, 4vh, 40px);
+  width: max-content;
+  margin: 0 auto;
+  z-index: 6;
+  color: rgba(255, 238, 208, 0.9);
+  background: rgba(6, 6, 9, 0.8);
+  border-color: rgba(255, 214, 140, 0.32);
+}
+
+#scene-gift .btn:hover,
+#scene-gift .btn:focus-visible {
+  color: #fff6e6;
+  border-color: rgba(255, 214, 140, 0.6);
+}
+
 /* carta */
 .letter {
   position: absolute;
@@ -983,7 +1373,7 @@
 .letter__paper {
   position: relative;
   width: min(92vw, 620px);
-  max-height: 84vh;
+  max-height: 74vh;
   overflow-y: auto;
   background:
     linear-gradient(180deg, #eae6de 0%, #e4e0d6 100%);
@@ -1149,9 +1539,7 @@
 
   .orbit { width: min(70vmin, 330px); height: min(70vmin, 330px); }
 
-  .critter { bottom: clamp(150px, 30vh, 230px); }
-
-  .animals__lines { margin-top: clamp(180px, 40vh, 300px); }
+  .animals__lines { margin-top: clamp(0px, 3vh, 26px); }
 
   .sentence { padding: clamp(28px, 6vh, 46px) clamp(18px, 6vw, 34px); }
 
@@ -1186,7 +1574,7 @@
   .rule {
     font-size: clamp(14px, 3.4vh, 18px);
     line-height: 1.7;
-    padding: clamp(10px, 3vh, 26px) clamp(14px, 5%, 40px);
+    padding: clamp(10px, 3vh, 26px) clamp(14px, 5%, 40px) clamp(10px, 3vh, 26px) clamp(26px, 9%, 44px);
     min-height: 0;
   }
   .rule__no { margin-bottom: 0.9em; }
@@ -1199,12 +1587,18 @@
   .name-meta__line { font-size: 12px; line-height: 1.75; }
   .pen { top: -18px; height: clamp(50px, 16vh, 74px); }
 
-  .animals__lines { margin-top: clamp(70px, 22vh, 150px); }
-  .critter { bottom: clamp(60px, 16vh, 120px); }
+  .animals__lines { margin-top: clamp(0px, 2vh, 14px); min-height: 6em; }
+
+  .letter__paper { max-height: 66vh; }
 
   .sentence { padding-top: clamp(16px, 4vh, 34px); padding-bottom: clamp(16px, 4vh, 34px); }
 
-  #scene-dragon .dragon__lines { bottom: clamp(64px, 16vh, 130px); }
+  #scene-dragon .dragon__lines { bottom: clamp(46px, 12vh, 130px); }
+  #scene-dragon .orbit--sm {
+    top: 40%;
+    width: min(50vmin, 430px);
+    height: min(50vmin, 430px);
+  }
   .whisper { font-size: clamp(16px, 4vh, 24px); line-height: 1.5; }
   .whisper--low { font-size: clamp(13px, 3.4vh, 18px); margin-top: 0.8em; }
 }

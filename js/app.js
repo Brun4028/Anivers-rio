@@ -79,6 +79,180 @@
     if (typingActive) skipFlag = true;
   }, true);
 
+  /* ============================================================
+     ESCRITA À MÃO — tinta assentando no papel
+     ------------------------------------------------------------
+     Cada letra vira um glifo próprio, com micro-variações de
+     ângulo, linha de base, espaçamento e espessura; a sequência
+     é frase a frase, com pausas, como se uma caneta invisível
+     estivesse realmente escrevendo. O texto original é preservado
+     byte a byte (o DOM só é reorganizado, nunca reescrito).
+     ============================================================ */
+  const INK_WEIGHTS = [400, 400, 400, 300, 700];
+
+  function inkJitter(s) {
+    s.style.setProperty("--jr", (Math.random() * 2.6 - 1.3).toFixed(2) + "deg");
+    s.style.setProperty("--jy", (Math.random() * 0.1 - 0.05).toFixed(3) + "em");
+    s.style.setProperty("--jo", (0.72 + Math.random() * 0.28).toFixed(2));
+    const r = Math.random();
+    const ml = r < 0.13 ? 0.04 + Math.random() * 0.03
+             : r > 0.9  ? -0.02 - Math.random() * 0.015
+                        : Math.random() * 0.024 - 0.01;
+    s.style.marginLeft = ml.toFixed(3) + "em";
+  }
+
+  function graphemes(text) {
+    try {
+      if (typeof Intl !== "undefined" && Intl.Segmenter) {
+        return Array.from(new Intl.Segmenter().segment(text), function (g) { return g.segment; });
+      }
+    } catch (e) { /* segmentação indisponível: cai para code points */ }
+    return Array.from(text);
+  }
+
+  /* monta o conteúdo preservando 100% do texto original e
+     devolve a lista de passos (letras e espaços) na ordem */
+  function buildInk(el, text) {
+    el.textContent = "";
+    const steps = [];
+    const parts = text.split(/(\s+)/);
+    for (let p = 0; p < parts.length; p++) {
+      const part = parts[p];
+      if (!part) continue;
+      if (/^\s+$/.test(part)) {
+        el.appendChild(document.createTextNode(part));
+        for (let k = 0; k < part.length; k++) steps.push({ ws: true, ch: part.charAt(k) });
+      } else {
+        const word = document.createElement("span");
+        word.className = "ink-word";
+        word.style.fontWeight = INK_WEIGHTS[(Math.random() * INK_WEIGHTS.length) | 0];
+        const gs = graphemes(part);
+        for (let g = 0; g < gs.length; g++) {
+          const s = document.createElement("span");
+          s.className = "ink-ch is-pending";
+          s.textContent = gs[g];
+          inkJitter(s);
+          word.appendChild(s);
+          steps.push({ el: s, ch: gs[g] });
+        }
+        el.appendChild(word);
+      }
+    }
+    return steps;
+  }
+
+  /* uma letra já escrita (usada pela pena da cena do nome) */
+  function inkAppend(el, ch) {
+    const s = document.createElement("span");
+    s.className = "ink-ch is-inked";
+    s.textContent = ch;
+    inkJitter(s);
+    el.appendChild(s);
+    return s;
+  }
+
+  /* escreve texto inteiro, letra a letra, com pausa entre frases */
+  function writeInk(el, text, t, opts) {
+    opts = opts || {};
+    const charMs = opts.charMs || 50;
+    const gap = opts.sentencePause || 520;
+    const sound = opts.sound === undefined ? 0.3 : opts.sound;
+    typingActive = true;
+    skipFlag = false;
+    el.classList.add("ink-host");
+    const steps = buildInk(el, text);
+
+    let nib = null;
+    if (opts.nib !== false) {
+      nib = document.createElement("span");
+      nib.className = "ink-nib";
+      nib.setAttribute("aria-hidden", "true");
+      el.appendChild(nib);
+    }
+
+    function place(chEl) {
+      if (!nib || !chEl.isConnected) return;
+      const a = chEl.getBoundingClientRect();
+      const b = el.getBoundingClientRect();
+      nib.style.left = (a.right - b.left - 1.5) + "px";
+      nib.style.top = (a.top - b.top + a.height * 0.76) + "px";
+      nib.classList.add("is-on");
+    }
+
+    function finish() {
+      typingActive = false;
+      el.classList.add("ink-done");
+      if (nib) {
+        const n = nib;
+        nib = null;
+        n.classList.remove("is-on");
+        setTimeout(function () { if (n.parentNode) n.parentNode.removeChild(n); }, 700);
+      }
+    }
+
+    function inkAll() {
+      for (let i = 0; i < steps.length; i++) {
+        if (steps[i].el) steps[i].el.classList.remove("is-pending");
+      }
+    }
+
+    return new Promise(function (resolve) {
+      let i = 0;
+      function step() {
+        if (t !== undefined && t !== token) { inkAll(); finish(); resolve(); return; }
+        if (skipFlag) { skipFlag = false; inkAll(); finish(); resolve(); return; }
+        if (i >= steps.length) { finish(); resolve(); return; }
+        const s = steps[i++];
+        if (s.el) {
+          s.el.classList.remove("is-pending");
+          s.el.classList.add("is-inked");
+          place(s.el);
+          if (s.ch !== " " && Math.random() < sound) SFX.write();
+        }
+        let d = charMs + (Math.random() * charMs * 0.7 - charMs * 0.35);
+        if (s.ch === "." || s.ch === "?" || s.ch === "!" || s.ch === ";") d += gap;
+        else if (s.ch === "\n") d += gap * 0.55;
+        else if (s.ws) d *= 0.7;
+        setTimeout(step, d);
+      }
+      step();
+    });
+  }
+
+  /* varredura da caneta numa linha curta (esquerda → direita) */
+  function wipeInk(el, t, dur) {
+    const d = dur || 800;
+    typingActive = true;
+    skipFlag = false;
+    el.classList.remove("ink-wipe", "is-wiped");
+    el.style.setProperty("--wipe", d + "ms");
+    el.style.transition = "";
+    void el.offsetWidth;              /* confirma o estado oculto */
+    el.classList.add("ink-wipe");
+    void el.offsetWidth;              /* força o recálculo de estilo */
+    el.classList.add("is-wiped");     /* dispara a varredura, sem depender de rAF */
+    return new Promise(function (resolve) {
+      let settled = false;
+      function end(instant) {
+        if (settled) return;
+        settled = true;
+        if (instant) {
+          el.style.transition = "none";
+          setTimeout(function () { el.style.transition = ""; }, 80);
+        }
+        el.classList.add("is-wiped");   /* garante a linha visível ao final */
+        typingActive = false;
+        resolve();
+      }
+      const timer = setTimeout(function () { end(false); }, d);
+      const iv = setInterval(function () {
+        if (t !== undefined && t !== token) { clearInterval(iv); clearTimeout(timer); end(false); return; }
+        if (skipFlag) { skipFlag = false; clearInterval(iv); clearTimeout(timer); end(true); }
+      }, 70);
+      setTimeout(function () { clearInterval(iv); }, d + 140);
+    });
+  }
+
   /* ---------------- utilitários de elemento ---------------- */
   function reveal(el) { el.classList.add("is-visible"); }
 
@@ -179,17 +353,19 @@
     box.innerHTML = "";
     const no = document.createElement("span");
     no.className = "rule__no";
-    no.textContent = RULES[i].no;
     const tx = document.createElement("span");
     tx.className = "rule__text";
     box.appendChild(no);
     box.appendChild(tx);
-    no.style.opacity = "0";
-    no.style.transition = "opacity 1.2s ease";
-    requestAnimationFrame(function () { no.style.opacity = "1"; });
-    await sleep(650);
+
+    /* papel vazio → a caneta começa pelo título */
+    await writeInk(no, RULES[i].no, t, { charMs: 56, sentencePause: 0, nib: true, sound: 0.34 });
     if (!alive(t)) return;
-    await type(tx, RULES[i].text, t, 62);
+    await sleep(560);
+    if (!alive(t)) return;
+
+    /* depois o corpo da regra, frase a frase */
+    await writeInk(tx, RULES[i].text, t, { charMs: 52, sentencePause: 700, nib: true });
     if (!alive(t)) return;
 
     if (i === RULES.length - 1) {
@@ -478,7 +654,7 @@
     const word = CFG.name;
     for (let i = 0; i < word.length; i++) {
       if (!alive(t)) return;
-      nameEl.textContent += word.charAt(i);
+      inkAppend(nameEl, word.charAt(i));
       SFX.write();
       /* pena acompanha o ponto de escrita */
       const w = nameEl.getBoundingClientRect().width;
@@ -494,11 +670,13 @@
     await sleep(900);
     if (!alive(t)) return;
 
-    /* linhas de registro */
+    /* linhas de registro: a caneta varre cada linha */
     for (let i = 0; i < lines.length; i++) {
       if (!alive(t)) return;
       lines[i].classList.add("is-visible");
-      await sleep(850);
+      await wipeInk(lines[i], t, 780);
+      if (!alive(t)) return;
+      await sleep(460);
     }
 
     await sleep(1500);
@@ -542,12 +720,18 @@
     doc.classList.add("is-in");
 
     const list = document.querySelectorAll("#sentence-list li");
-    list.forEach(function (li) { li.classList.remove("is-visible"); });
+    list.forEach(function (li) {
+      li.classList.remove("is-visible");
+      /* volta ao estado "papel vazio" sem alterar uma vírgula do texto */
+      buildInk(li, li.textContent);
+    });
     document.querySelectorAll(".sentence .ornament").forEach(function (o) { o.classList.remove("is-visible"); });
     document.querySelectorAll(".sentence__hr").forEach(function (h) { h.classList.remove("is-visible"); });
     document.querySelector(".sentence__lead").classList.remove("is-visible");
     document.querySelector(".sentence__duration").classList.remove("is-visible");
-    $("sentence-forever").classList.remove("is-visible");
+    const forever = $("sentence-forever");
+    forever.classList.remove("is-visible");
+    buildInk(forever, forever.textContent);
     hideBtn($("btn-sentence"));
 
     await sleep(1400);
@@ -563,8 +747,10 @@
     for (let i = 0; i < list.length; i++) {
       if (!alive(t)) return;
       list[i].classList.add("is-visible");
-      if (i % 2 === 0) SFX.write();
-      await sleep(760);
+      await writeInk(list[i], list[i].textContent, t,
+        { charMs: 44, sentencePause: 300, nib: false, sound: 0.22 });
+      if (!alive(t)) return;
+      await sleep(340);
     }
 
     await sleep(900);
@@ -576,8 +762,11 @@
     await sleep(1400);
     if (!alive(t)) return;
     SFX.ink();
-    $("sentence-forever").classList.add("is-visible");
-    await sleep(2600);
+    forever.classList.add("is-visible");
+    await writeInk(forever, forever.textContent, t,
+      { charMs: 82, sentencePause: 460, nib: true, sound: 0.34 });
+    if (!alive(t)) return;
+    await sleep(2200);
     if (!alive(t)) return;
     document.querySelector(".ornament--bottom").classList.add("is-visible");
     await sleep(1100);
@@ -608,7 +797,8 @@
      CENA 8 — OS ANIMAIS
      ============================================================ */
   async function enterAnimals(t) {
-    FX.setDust(0.85);
+    /* atmosfera quieta: luz, sombra e partículas bem sutis */
+    FX.setDust(0.65);
     $("animal-line-1").textContent = "";
     $("animal-line-2").textContent = "";
     hideBtn($("btn-gift"));
@@ -669,7 +859,9 @@
     const textEl = $("letter-text");
     await sleep(1500);
     if (!alive(t)) return;
-    await type(textEl, letterText(), t, 17);
+    /* carta: escrita à mão, tinta escura sobre papel */
+    await writeInk(textEl, letterText(), t,
+      { charMs: 15, sentencePause: 340, nib: true, sound: 0.1 });
     if (!alive(t)) return;
     document.querySelector(".letter__seal").classList.add("is-visible");
     SFX.ink();

@@ -16,7 +16,11 @@
 
   --font-title : "Cormorant Garamond", "Times New Roman", serif;
   --font-text   : "Spectral", Georgia, serif;
-  --font-hand   : "Caveat", "Segoe Script", cursive;
+  /* escrita manual de caderno: simples, natural e legível
+     (letra de caneta, sem aparência caligráfica ou digital) */
+  --font-hand   : "Architects Daughter", "Segoe Print", "Comic Sans MS", cursive;
+  /* tinta clara sobre a folha escura do caderno */
+  --ink-page    : rgba(232, 228, 220, 0.88);
 
   --ease-cine: cubic-bezier(0.22, 0.61, 0.24, 1);
 }
@@ -179,6 +183,58 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 }
 
 .rule__text { white-space: pre-wrap; display: block; }
+
+/* ---------- Escrita à mão: tinta sobre papel ----------
+   Cada letra é um glifo próprio, com micro-variações de
+   ângulo, linha de base, espaçamento e espessura — e entra
+   na página como se uma caneta a estivesse desenhando.  */
+.ink-host { position: relative; }
+
+.ink-word {
+  display: inline-block;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+.ink-ch {
+  display: inline-block;
+  opacity: var(--jo, 1);
+  transform: translateY(var(--jy, 0)) rotate(var(--jr, 0));
+  text-shadow: var(--ink-shadow,
+               0 0 0.4px rgba(10, 9, 7, 0.65),
+               0 0 1.8px rgba(10, 9, 7, 0.16));
+}
+
+.ink-ch.is-pending { opacity: 0; }
+
+.ink-ch.is-inked {
+  animation: inkStroke var(--ink-dur, 180ms) cubic-bezier(0.3, 0.7, 0.4, 1) both;
+}
+
+/* ponta da caneta invisível que acompanha a escrita */
+.ink-nib {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ink-nib, rgba(16, 14, 11, 0.92));
+  box-shadow: 0 0 6px var(--ink-nib, rgba(16, 14, 11, 0.45)),
+              0 0 15px rgba(217, 154, 32, 0.3);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 4;
+  transition: left 90ms linear, top 90ms linear, opacity 0.45s ease;
+}
+.ink-nib.is-on { opacity: 0.95; }
+
+/* varredura lateral: a caneta atravessa a linha da esquerda
+   para a direita (linhas curtas de registro) */
+.ink-wipe { clip-path: inset(0 100% -40% 0); }
+.ink-wipe.is-wiped {
+  clip-path: inset(0 -8% -40% 0);
+  transition: clip-path var(--wipe, 800ms) cubic-bezier(0.4, 0.5, 0.3, 1);
+}
 
 /* ---------- Indicador "TOCAR" ---------- */
 .intro__hint {
