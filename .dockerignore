@@ -1,0 +1,13 @@
+.git
+.github
+.freebuff
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+README.md
+tools/debug.mjs
+tools/probe.mjs
+tools/render.mjs
+tools/shots.mjs
+tools/verify.mjs
