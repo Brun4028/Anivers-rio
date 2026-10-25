@@ -10,7 +10,7 @@ window.DN_CONFIG = {
   /* --- Dados da aniversariante --- */
   name: "ISADORA",            // como o nome deve ser escrito no livro
   displayName: "Isadora",     // como o nome aparece em frases
-  birthday: "22/10/2026",      // ex.: "14 de abril"  (deixe vazio para manter só o rótulo)
+  birthday: "26/10",      // ex.: "14 de abril"  (deixe vazio para manter só o rótulo)
 
   /* --- Carta / mensagem pessoal -------------------------
      Edite o conteúdo abaixo. Cada string entre crases

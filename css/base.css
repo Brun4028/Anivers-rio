@@ -118,8 +118,8 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
   inset: 0;
   pointer-events: none;
   background: radial-gradient(ellipse at center,
-              transparent 45%,
-              rgba(0, 0, 0, 0.55) 100%);
+              transparent 48%,
+              rgba(0, 0, 0, 0.6) 100%);
 }
 
 .scene > * { position: relative; z-index: 1; }
@@ -338,9 +338,24 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 
 /* ---------- Acessibilidade: movimento reduzido ---------- */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.2s !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .scene {
+    transition: opacity 0.6s ease, visibility 0s linear 0.6s;
+  }
+
+  .scene.is-active {
+    transition: opacity 0.6s ease, visibility 0s;
+  }
+
+  .gift {
+    animation: none !important;
   }
 }

@@ -912,6 +912,7 @@
     const gift = $("gift");
     gift.dataset.opened = "";
     gift.classList.remove("is-opening", "is-gone");
+    gift.style.animation = "";
     $("gift-hint").classList.add("is-visible");
     const envelope = $("envelope");
     envelope.hidden = true;
@@ -965,11 +966,11 @@
     if (!alive(t)) return;
     await sleep(1900);
     if (!alive(t)) return;
-    await type($("final-2"), "Um livro pode registrar destinos...", t, 62);
+    await type($("final-2"), "O Death Note pode registrar destinos...", t, 62);
     if (!alive(t)) return;
     await sleep(1900);
     if (!alive(t)) return;
-    await type($("final-3"), "Mas nenhum dos dois consegue criar algo assim.", t, 62);
+    await type($("final-3"), "Mas hoje, o universo inteiro celebra a exist\u00eancia de algu\u00e9m especial.", t, 62);
     if (!alive(t)) return;
     await sleep(3000);
     if (!alive(t)) return;
@@ -988,7 +989,7 @@
 
     await sleep(700);
     if (!alive(t)) return;
-    $("final-friendship").textContent = "AMIZADE.";
+    $("final-friendship").textContent = "EXTRAORDIN\u00c1RIA.";
     $("final-friendship").classList.add("is-visible");
 
     await sleep(3000);
