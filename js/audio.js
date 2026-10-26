@@ -3,8 +3,8 @@
    ------------------------------------------------------------
    Todos os efeitos são gerados por WebAudio (sem arquivos),
    o que mantém o projeto offline e sem direitos autorais.
-   A música ambiente usa um arquivo local opcional em
-   assets/audio/ambient.mp3 (definido em config.js).
+   A trilha sonora usa um único elemento <audio> persistente,
+   definido em config.js, e continua entre as cenas.
    ============================================================ */
 
 window.DNAudio = (function () {
@@ -15,10 +15,89 @@ window.DNAudio = (function () {
   let started = false;
   let muted = false;
   let musicEl = null;
+  let musicGain = null;
+  let musicFade = 0;
+
+  function clampVolume(value) {
+    return Math.max(0, Math.min(1, Number(value) || 0));
+  }
+
+  function musicVolume() {
+    if (musicGain) return musicGain.gain.value;
+    return musicEl ? musicEl.volume : 0;
+  }
+
+  function setMusicVolume(value) {
+    const v = clampVolume(value);
+    if (musicGain) musicGain.gain.value = v;
+    else if (musicEl) musicEl.volume = v;
+  }
+
+  function playMusic() {
+    if (!musicEl || muted || !musicEl.paused) return;
+    const tryPlay = musicEl.play();
+    if (tryPlay && typeof tryPlay.catch === "function") {
+      tryPlay.catch(function () { /* espera um gesto do usuário */ });
+    }
+  }
+
+  function fadeMusic(target, ms) {
+    if (!musicEl) return;
+    const to = clampVolume(target);
+    const duration = Math.max(0, Number(ms) || 0);
+    if (musicFade) {
+      cancelAnimationFrame(musicFade);
+      musicFade = 0;
+    }
+    if (!duration) {
+      setMusicVolume(to);
+      return;
+    }
+    const from = musicVolume();
+    const t0 = performance.now();
+    function tick(now) {
+      if (!musicEl) { musicFade = 0; return; }
+      const p = Math.min(1, (now - t0) / duration);
+      const eased = p * p * (3 - 2 * p);
+      setMusicVolume(from + (to - from) * eased);
+      if (p < 1) {
+        musicFade = requestAnimationFrame(tick);
+      } else {
+        setMusicVolume(to);
+        musicFade = 0;
+      }
+    }
+    musicFade = requestAnimationFrame(tick);
+  }
 
   function init() {
     if (started) return;
     started = true;
+
+    const baseVolume = clampVolume(cfg.music.volume);
+    let needsGain = false;
+
+    // Trilha sonora: uma única instância, mantida durante toda a experiência
+    if (cfg.music.enabled && cfg.music.src) {
+      musicEl = document.getElementById("music");
+      if (musicEl) {
+        musicEl.src = cfg.music.src;
+        musicEl.volume = baseVolume;
+        musicEl.loop = true;
+        musicEl.addEventListener("error", function () {
+          musicEl = null; // sem arquivo: segue só com os efeitos
+        });
+        // iOS ignora .volume; nesses aparelhos o controle é feito por um GainNode
+        try {
+          musicEl.volume = 0.5;
+          needsGain = Math.abs(musicEl.volume - 0.5) > 0.01;
+        } catch (e) {
+          needsGain = true;
+        }
+        try { musicEl.volume = baseVolume; } catch (e) { /* iOS ignora */ }
+        playMusic();
+      }
+    }
 
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return;
@@ -32,19 +111,17 @@ window.DNAudio = (function () {
     sfxBus.gain.value = cfg.sfx.volume;
     sfxBus.connect(master);
 
-    // Música ambiente (arquivo local opcional)
-    if (cfg.music.enabled && cfg.music.src) {
-      musicEl = document.getElementById("music");
-      if (musicEl) {
-        musicEl.src = cfg.music.src;
-        musicEl.volume = cfg.music.volume;
-        musicEl.addEventListener("error", function () {
-          musicEl = null; // sem arquivo: segue só com os efeitos
-        });
-        const tryPlay = musicEl.play();
-        if (tryPlay && typeof tryPlay.catch === "function") {
-          tryPlay.catch(function () { /* espera um gesto do usuário */ });
-        }
+    if (needsGain && musicEl) {
+      try {
+        const source = ctx.createMediaElementSource(musicEl);
+        musicGain = ctx.createGain();
+        musicGain.gain.value = baseVolume;
+        source.connect(musicGain);
+        musicGain.connect(ctx.destination);
+        musicEl.volume = 1;
+      } catch (e) {
+        musicGain = null;
+        try { musicEl.volume = baseVolume; } catch (err) { /* iOS ignora */ }
       }
     }
   }
@@ -246,27 +323,48 @@ window.DNAudio = (function () {
   /* ---------- controle ---------- */
   function unlock() {
     init();
-    if (ctx && ctx.state === "suspended") ctx.resume();
-    if (musicEl && musicEl.paused) {
-      const p = musicEl.play();
-      if (p && p.catch) p.catch(function () {});
+    if (ctx && ctx.state === "suspended") {
+      const resumed = ctx.resume();
+      if (resumed && typeof resumed.catch === "function") {
+        resumed.catch(function () {});
+      }
     }
+    playMusic();
   }
 
   function toggle() {
     muted = !muted;
     if (master) master.gain.value = muted ? 0 : (cfg.sfx.enabled ? 1 : 0);
-    if (musicEl) musicEl.muted = muted;
+    if (musicEl) {
+      musicEl.muted = muted;
+      if (muted) {
+        musicEl.pause();
+      } else {
+        playMusic();
+      }
+    }
     return muted;
   }
 
   function isMuted() { return muted; }
+
+  function climax() {
+    if (!cfg.music.enabled) return;
+    const target = cfg.music.finalVolume === undefined
+      ? cfg.music.volume
+      : cfg.music.finalVolume;
+    const ms = cfg.music.finalFadeMs === undefined
+      ? 5000
+      : cfg.music.finalFadeMs;
+    fadeMusic(target, ms);
+  }
 
   return {
     init: init,
     unlock: unlock,
     toggle: toggle,
     isMuted: isMuted,
+    climax: climax,
     sfx: sfx
   };
 })();

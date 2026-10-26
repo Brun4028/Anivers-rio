@@ -290,7 +290,17 @@
 
 </main>
 
-<button class="sound" id="sound-toggle" aria-label="Ativar ou desativar som" hidden>SOM</button>
+<button class="sound" id="sound-toggle" aria-label="Pausar e silenciar a música e os efeitos sonoros" aria-pressed="false" title="Som ligado — clique para pausar e silenciar" hidden>SOM</button>
+
+<details class="credits" id="credits">
+  <summary aria-label="Créditos da trilha sonora">CRÉDITOS</summary>
+  <div class="credits__panel">
+    <p>“Story Of A Birthday Child” — Sascha Ende</p>
+    <p>Licença: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></p>
+    <p><a href="https://ende.app/en/song/12695-story-of-a-birthday-child" target="_blank" rel="noopener noreferrer">https://ende.app/en/song/12695-story-of-a-birthday-child</a></p>
+  </div>
+</details>
+
 <audio id="music" loop preload="auto"></audio>
 
 <script src="js/config.js"></script>

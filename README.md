@@ -43,16 +43,20 @@ Tudo que precisa editar está em **`js/config.js`**:
 | `sfx.volume`      | Volume dos efeitos (0 a 1)                                    |
 | `timing.*`        | Velocidade da escrita e das transições                        |
 
-### Música ambiente (opcional)
+### Trilha sonora
 
-Coloque um arquivo **royalty-free** em:
+A experiência usa uma única faixa instrumental persistente:
 
 ```
-assets/audio/ambient.mp3
+assets/audio/story-of-a-birthday-child.mp3
 ```
 
-Se o arquivo não existir, nada quebra — a experiência continua apenas com os
-efeitos sonoros. Não use músicas com direitos autorais.
+“Story Of A Birthday Child” — Sascha Ende  
+Licença: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)  
+<https://ende.app/en/song/12695-story-of-a-birthday-child>
+
+O volume começa baixo e sobe suavemente na última cena. Se o arquivo não
+existir, nada quebra — a experiência continua apenas com os efeitos sonoros.
 
 ### Efeitos sonoros
 
@@ -71,10 +75,10 @@ css/base.css        paleta, tipografia, palco, botões
 css/scenes.css      composição de cada capítulo
 css/animations.css  keyframes (transições, órbitas, caminhada)
 js/config.js        ← edite aqui (nome, data, carta, música)
-js/audio.js         efeitos sonoros sintetizados + música ambiente
+js/audio.js         efeitos sonoros sintetizados + trilha sonora persistente
 js/fx.js            partículas em canvas (poeira e brilhos)
 js/app.js           direção da experiência (cenas e interações)
-assets/audio/       coloque ambient.mp3 aqui (opcional)
+assets/audio/       trilha sonora oficial (CC BY 4.0)
 ```
 
 ---
@@ -86,7 +90,8 @@ O DESEJO → O NOME DA ISADORA → A SENTENÇA → OS ANIMAIS → A CARTA →
 A MENSAGEM FINAL
 
 Toques durante a escrita aceleram a datilografia.
-O botão **SOM** (canto superior direito) liga e desliga o áudio.
+O botão **SOM** (canto superior direito) ativa, pausa e silencia a música e
+os efeitos sonoros, retomando a faixa de onde ela parou.
 
 ---
 

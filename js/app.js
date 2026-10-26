@@ -950,6 +950,7 @@
      ============================================================ */
   async function enterFinal(t) {
     FX.setDust(0.7);
+    DNAudio.climax();
     const mark = $("final-mark");
     mark.hidden = true;
     mark.classList.remove("is-lit");
@@ -1041,6 +1042,8 @@
   function boot() {
     current = $("scene-intro");
 
+    DNAudio.init();
+
     bindBook();
     bindRules();
     bindDragon();
@@ -1054,6 +1057,18 @@
 
     /* desbloqueio de áudio no primeiro toque + botão de som */
     const soundBtn = $("sound-toggle");
+
+    function syncSoundBtn(muted) {
+      soundBtn.classList.toggle("is-muted", muted);
+      soundBtn.setAttribute("aria-pressed", muted ? "true" : "false");
+      soundBtn.setAttribute("aria-label", muted
+        ? "Ativar a música e os efeitos sonoros"
+        : "Pausar e silenciar a música e os efeitos sonoros");
+      soundBtn.title = muted
+        ? "Som pausado — clique para ativar"
+        : "Som ligado — clique para pausar e silenciar";
+    }
+
     function firstTouch() {
       DNAudio.unlock();
       soundBtn.hidden = false;
@@ -1062,10 +1077,12 @@
     }
     document.addEventListener("pointerdown", firstTouch);
 
+    syncSoundBtn(DNAudio.isMuted());
+
     soundBtn.addEventListener("click", function (e) {
       e.stopPropagation();
       const muted = DNAudio.toggle();
-      soundBtn.classList.toggle("is-muted", muted);
+      syncSoundBtn(muted);
     });
 
     /* inicia a introdução */

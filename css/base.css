@@ -336,6 +336,53 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 .sound:hover { color: var(--ink-dim); border-color: rgba(232, 228, 220, 0.3); }
 .sound.is-muted { text-decoration: line-through; color: rgba(232, 228, 220, 0.18); }
 
+/* ---------- Créditos da trilha sonora ---------- */
+.credits {
+  position: fixed;
+  left: clamp(14px, 3vw, 28px);
+  bottom: clamp(14px, 3vh, 28px);
+  z-index: 40;
+  max-width: min(360px, calc(100vw - 28px));
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+  color: var(--ink-faint);
+}
+
+.credits summary {
+  display: inline-block;
+  list-style: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  border: 1px solid rgba(232, 228, 220, 0.1);
+  opacity: 0.55;
+  transition: opacity 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+}
+
+.credits summary::-webkit-details-marker { display: none; }
+.credits summary:hover,
+.credits[open] summary { opacity: 0.85; color: var(--ink-dim); border-color: rgba(232, 228, 220, 0.3); }
+.credits summary:focus-visible { outline: 1px solid rgba(232, 228, 220, 0.45); outline-offset: 3px; }
+
+.credits__panel {
+  margin-top: 8px;
+  padding: 12px 14px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-indent: 0;
+  line-height: 1.7;
+  color: var(--ink-dim);
+  background: rgba(5, 5, 7, 0.9);
+  border: 1px solid rgba(232, 228, 220, 0.12);
+  overflow-wrap: anywhere;
+}
+
+.credits__panel p { margin: 0 0 4px; }
+.credits__panel p:last-child { margin-bottom: 0; }
+.credits__panel a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.credits__panel a:hover { color: var(--ink); }
+.credits__panel a:focus-visible { outline: 1px solid rgba(232, 228, 220, 0.45); outline-offset: 3px; }
+
 /* ---------- Acessibilidade: movimento reduzido ---------- */
 @media (prefers-reduced-motion: reduce) {
   *,

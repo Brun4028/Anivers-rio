@@ -35,15 +35,15 @@ se você está lendo isso, então chegou ao fim dessa pequena jornada que prepar
 Que o melhor ainda esteja por vir.`
   ],
 
-  /* --- Música ambiente (opcional) -----------------------
-     Coloque um arquivo livre de direitos em:
-       assets/audio/ambient.mp3
-     e mantenha a linha abaixo. Sem arquivo, a experiência
-     funciona normalmente (apenas com efeitos sonoros).   */
+  /* --- Trilha sonora -----------------------------------
+     “Story Of A Birthday Child” — Sascha Ende
+     Licença CC BY 4.0 — https://ende.app/en/song/12695-story-of-a-birthday-child */
   music: {
     enabled: true,
-    src: "assets/audio/ambient.mp3",
-    volume: 0.35   // 0 a 1
+    src: "assets/audio/story-of-a-birthday-child.mp3",
+    volume: 0.16,        // volume inicial, discreto (0 a 1)
+    finalVolume: 0.28,   // leve clímax na última cena (0 a 1)
+    finalFadeMs: 5000    // transição gradual de volume (ms)
   },
 
   /* --- Efeitos sonoros ------------------------------- */

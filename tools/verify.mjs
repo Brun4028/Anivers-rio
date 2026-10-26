@@ -366,9 +366,9 @@ function check(results, label, failures) {
   f(results.final.animal1 === "Ah... quase esqueci.", "animal1: " + JSON.stringify(results.final.animal1));
   f(results.final.animal2 === "Existe mais uma coisa para você.", "animal2: " + JSON.stringify(results.final.animal2));
   f(results.final.final1 === "As Esferas do Dragão podem realizar desejos...", "final1: " + JSON.stringify(results.final.final1));
-  f(results.final.final2 === "Um livro pode registrar destinos...", "final2: " + JSON.stringify(results.final.final2));
-  f(results.final.final3 === "Mas nenhum dos dois consegue criar algo assim.", "final3: " + JSON.stringify(results.final.final3));
-  f(results.final.friendship === "AMIZADE.", "friendship: " + JSON.stringify(results.final.friendship));
+  f(results.final.final2 === "O Death Note pode registrar destinos...", "final2: " + JSON.stringify(results.final.final2));
+  f(results.final.final3 === "Mas hoje, o universo inteiro celebra a existência de alguém especial.", "final3: " + JSON.stringify(results.final.final3));
+  f(results.final.friendship === "EXTRAORDINÁRIA.", "friendship: " + JSON.stringify(results.final.friendship));
   f(results.final.finalName === "ISADORA", "finalName: " + JSON.stringify(results.final.finalName));
   f(results.final.birth === "Feliz aniversário.", "birth: " + JSON.stringify(results.final.birth));
   f(results.final.birthday === "FELIZ ANIVERSÁRIO, ISADORA",

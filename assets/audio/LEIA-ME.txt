@@ -1,8 +1,11 @@
-Coloque aqui um arquivo de música ambiente royalty-free com o nome:
+Trilha sonora:
 
-    ambient.mp3
+    story-of-a-birthday-child.mp3
+
+“Story Of A Birthday Child” — Sascha Ende
+Licença: CC BY 4.0
+https://ende.app/en/song/12695-story-of-a-birthday-child
 
 Definido em js/config.js -> music.src.
-
 Sem o arquivo a experiência funciona normalmente, apenas com os
 efeitos sonoros sintetizados.
